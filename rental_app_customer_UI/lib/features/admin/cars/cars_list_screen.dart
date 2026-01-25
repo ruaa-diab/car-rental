@@ -102,6 +102,7 @@ class _CarsListScreenState extends State<CarsListScreen> {
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
       ),
+            bottomNavigationBar: const AdminBottomNav(currentIndex: 1),
     );
   }
 
