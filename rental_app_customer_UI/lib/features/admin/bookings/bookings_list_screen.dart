@@ -107,6 +107,8 @@ class _BookingsListScreenState extends State<BookingsListScreen> {
           ),
         ],
       ),
+            bottomNavigationBar: const AdminBottomNav(currentIndex: 2),
+
     );
   }
 
