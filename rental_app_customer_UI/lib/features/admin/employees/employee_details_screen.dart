@@ -7,7 +7,7 @@ import '../../../core/models/employee.dart';
 class EmployeeDetailsScreen extends StatefulWidget {
   final String employeeId;
 
-  const EmployeeDetailsScreen({Key? key, required this.employeeId}) : super(key: key);
+  const EmployeeDetailsScreen({super.key, required this.employeeId});
 
   @override
   State<EmployeeDetailsScreen> createState() => _EmployeeDetailsScreenState();
@@ -71,7 +71,7 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.error_outline, size: 64, color: AppColors.error),
+              const Icon(Icons.error_outline, size: 64, color: AppColors.error),
               const SizedBox(height: 16),
               Text(
                 _error ?? 'Employee not found',
@@ -211,7 +211,7 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
                 child: Center(
                   child: Text(
                     employee['avatar'],
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 40,
                       fontWeight: FontWeight.bold,
                       color: AppColors.primary,
@@ -526,7 +526,7 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
               },
               style: OutlinedButton.styleFrom(
                 foregroundColor: AppColors.primary,
-                side: BorderSide(color: AppColors.primary),
+                side: const BorderSide(color: AppColors.primary),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),

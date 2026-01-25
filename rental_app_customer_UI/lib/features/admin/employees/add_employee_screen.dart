@@ -4,7 +4,7 @@ import '../../../core/theme/app_text_styles.dart';
 import '../../../core/services/employee_service.dart';
 
 class AddEmployeeScreen extends StatefulWidget {
-  const AddEmployeeScreen({Key? key}) : super(key: key);
+  const AddEmployeeScreen({super.key});
 
   @override
   State<AddEmployeeScreen> createState() => _AddEmployeeScreenState();
@@ -239,7 +239,7 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
       child: Column(
         children: [
           DropdownButtonFormField<String>(
-            value: _selectedPosition,
+            initialValue: _selectedPosition,
             decoration: InputDecoration(
               labelText: 'Position',
               prefixIcon: const Icon(Icons.work_outline),
@@ -261,7 +261,7 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
           ),
           const SizedBox(height: 16),
           DropdownButtonFormField<String>(
-            value: _selectedDepartment,
+            initialValue: _selectedDepartment,
             decoration: InputDecoration(
               labelText: 'Department',
               prefixIcon: const Icon(Icons.business_outlined),

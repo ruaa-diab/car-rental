@@ -8,7 +8,7 @@ import '../../../core/services/report_service.dart';
 import '../../../core/services/employee_service.dart';
 
 class PerformanceScreen extends StatefulWidget {
-  const PerformanceScreen({Key? key}) : super(key: key);
+  const PerformanceScreen({super.key});
 
   @override
   State<PerformanceScreen> createState() => _PerformanceScreenState();
@@ -466,7 +466,7 @@ class _PerformanceScreenState extends State<PerformanceScreen> {
             color: AppColors.success,
           ),
           const SizedBox(height: 16),
-          Divider(color: AppColors.divider),
+          const Divider(color: AppColors.divider),
           const SizedBox(height: 16),
           _buildMetricRow(
             title: 'Customer Satisfaction',
@@ -586,7 +586,7 @@ class _PerformanceScreenState extends State<PerformanceScreen> {
               ),
               if (!isLast) ...[
                 const SizedBox(height: 12),
-                Divider(color: AppColors.divider),
+                const Divider(color: AppColors.divider),
                 const SizedBox(height: 12),
               ],
             ],
@@ -705,7 +705,7 @@ class _PerformanceScreenState extends State<PerformanceScreen> {
                     backgroundColor: AppColors.primary.withOpacity(0.1),
                     child: Text(
                       review['customer'].toString()[0],
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: AppColors.primary,
                         fontWeight: FontWeight.bold,
                       ),
@@ -731,7 +731,7 @@ class _PerformanceScreenState extends State<PerformanceScreen> {
                   ),
                   Row(
                     children: [
-                      Icon(
+                      const Icon(
                         Icons.star,
                         size: 16,
                         color: AppColors.ratingStar,
@@ -739,7 +739,7 @@ class _PerformanceScreenState extends State<PerformanceScreen> {
                       const SizedBox(width: 4),
                       Text(
                         review['rating'].toString(),
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           color: AppColors.ratingStar,
                         ),

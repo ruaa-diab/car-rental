@@ -23,6 +23,13 @@ public class CarController {
     public ResponseEntity<List<Car>> getAllAvailableCars() {
         return ResponseEntity.ok(carService.getAllAvailableCars());
     }
+// ============ MANAGER ENDPOINTS ============
+
+@GetMapping
+@PreAuthorize("hasRole('MANAGER')")
+public ResponseEntity<List<Car>> getAllCars() {
+    return ResponseEntity.ok(carService.getAllCars());
+}
 
     @GetMapping("/public/{id}")
     public ResponseEntity<Car> getCarById(@PathVariable Long id) {

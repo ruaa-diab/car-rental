@@ -7,7 +7,7 @@ import 'employee_details_screen.dart';
 import 'add_employee_screen.dart';
 
 class EmployeesListScreen extends StatefulWidget {
-  const EmployeesListScreen({Key? key}) : super(key: key);
+  const EmployeesListScreen({super.key});
 
   @override
   State<EmployeesListScreen> createState() => _EmployeesListScreenState();
@@ -377,7 +377,7 @@ class _EmployeesListScreenState extends State<EmployeesListScreen> {
               child: Center(
                 child: Text(
                   employee.fullName.isNotEmpty ? employee.fullName[0].toUpperCase() : 'E',
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
                     color: AppColors.primary,
@@ -434,7 +434,7 @@ class _EmployeesListScreenState extends State<EmployeesListScreen> {
                   const SizedBox(height: 8),
                   Row(
                     children: [
-                      Icon(
+                      const Icon(
                         Icons.email_outlined,
                         size: 14,
                         color: AppColors.textSecondary,
@@ -453,7 +453,7 @@ class _EmployeesListScreenState extends State<EmployeesListScreen> {
                   Row(
                     children: [
                       if (employee.rating != null) ...[
-                        Icon(
+                        const Icon(
                           Icons.star,
                           size: 14,
                           color: AppColors.warning,
@@ -465,7 +465,7 @@ class _EmployeesListScreenState extends State<EmployeesListScreen> {
                         ),
                         const SizedBox(width: 12),
                       ],
-                      Icon(
+                      const Icon(
                         Icons.check_circle,
                         size: 14,
                         color: AppColors.success,
@@ -504,7 +504,7 @@ class _EmployeesListScreenState extends State<EmployeesListScreen> {
             ),
           ),
           const SizedBox(height: 8),
-          Text(
+          const Text(
             'Try adjusting your search or filters',
             style: AppTextStyles.caption,
           ),

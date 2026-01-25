@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_text_styles.dart';
 import '../../../core/services/car_service.dart';
@@ -215,7 +214,7 @@ class _RentCarScreenState extends State<RentCarScreen> {
   }
 
   Widget _buildCarSelection() {
-    return Container(
+    return SizedBox(
       height: 200,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
@@ -264,7 +263,7 @@ class _RentCarScreenState extends State<RentCarScreen> {
                         ),
                         Text(
                           '\$${car['pricePerDay'] ?? 0}/day',
-                          style: TextStyle(color: AppColors.primary),
+                          style: const TextStyle(color: AppColors.primary),
                         ),
                       ],
                     ),
@@ -335,7 +334,7 @@ class _RentCarScreenState extends State<RentCarScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Pickup Time', style: AppTextStyles.caption),
+                  const Text('Pickup Time', style: AppTextStyles.caption),
                   const SizedBox(height: 4),
                   Text(
                     _pickupTime != null
@@ -361,7 +360,7 @@ class _RentCarScreenState extends State<RentCarScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Return Time', style: AppTextStyles.caption),
+                  const Text('Return Time', style: AppTextStyles.caption),
                   const SizedBox(height: 4),
                   Text(
                     _returnTime != null
@@ -408,7 +407,7 @@ class _RentCarScreenState extends State<RentCarScreen> {
     return Column(
       children: [
         DropdownButtonFormField<int>(
-          value: _selectedPickupBranchId,
+          initialValue: _selectedPickupBranchId,
           decoration: InputDecoration(
             labelText: 'Pickup Branch',
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
@@ -423,7 +422,7 @@ class _RentCarScreenState extends State<RentCarScreen> {
         ),
         const SizedBox(height: 12),
         DropdownButtonFormField<int>(
-          value: _selectedReturnBranchId,
+          initialValue: _selectedReturnBranchId,
           decoration: InputDecoration(
             labelText: 'Return Branch',
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),

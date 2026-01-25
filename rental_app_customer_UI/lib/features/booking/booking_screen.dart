@@ -232,7 +232,7 @@ class _BookingScreenState extends State<BookingScreen> {
                 ),
               ),
               const SizedBox(height: 16),
-              ...cars.map((car) => _buildCarCard(car)).toList(),
+              ...cars.map((car) => _buildCarCard(car)),
             ],
           ),
         );
@@ -390,11 +390,11 @@ class _BookingScreenState extends State<BookingScreen> {
             children: [
               const Text('Pickup Location', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
               const SizedBox(height: 12),
-              ...branchProvider.branches.map((branch) => _buildBranchCard(branch, true)).toList(),
+              ...branchProvider.branches.map((branch) => _buildBranchCard(branch, true)),
               const SizedBox(height: 24),
               const Text('Return Location', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
               const SizedBox(height: 12),
-              ...branchProvider.branches.map((branch) => _buildBranchCard(branch, false)).toList(),
+              ...branchProvider.branches.map((branch) => _buildBranchCard(branch, false)),
             ],
           ),
         );
