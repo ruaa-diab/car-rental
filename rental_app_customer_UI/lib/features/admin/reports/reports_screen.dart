@@ -134,6 +134,8 @@ class _ReportsScreenState extends State<ReportsScreen> {
                 ),
               ),
             ),
+            bottomNavigationBar: const AdminBottomNav(currentIndex: 3),
+
     );
   }
 
