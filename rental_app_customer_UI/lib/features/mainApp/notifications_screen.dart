@@ -125,7 +125,6 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
           ],
         ),
       ),
-      bottomNavigationBar: const MainBottomNav(currentIndex: 3),
     );
   }
 
