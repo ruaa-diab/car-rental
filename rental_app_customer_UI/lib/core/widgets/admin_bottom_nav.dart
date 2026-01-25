@@ -28,7 +28,7 @@ class AdminBottomNav extends StatelessWidget {
         destination = const AdminDashboardScreen();
         break;
       case 1:
-        destination = CarsListScreen();
+        destination = const CarsListScreen();
         break;
       case 2:
         destination = BookingsListScreen();
