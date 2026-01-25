@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_text_styles.dart';
 import 'booking_details_screen.dart';
+import '../../../core/widgets/admin_bottom_nav.dart';
+
 
 class BookingsListScreen extends StatefulWidget {
   const BookingsListScreen({Key? key}) : super(key: key);

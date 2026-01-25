@@ -4,6 +4,7 @@ import '../../../core/theme/app_text_styles.dart';
 import '../../../core/services/car_service.dart';
 import 'car_details_screen.dart';
 import 'add_car_screen.dart';
+import '../../../core/widgets/admin_bottom_nav.dart';
 
 class CarsListScreen extends StatefulWidget {
   const CarsListScreen({Key? key}) : super(key: key);
