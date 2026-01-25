@@ -28,7 +28,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         child: Consumer<AuthProvider>(
           builder: (context, authProvider, child) {
             final user = authProvider.user;
-            
+
             return SingleChildScrollView(
               child: Column(
                 children: [
@@ -70,7 +70,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         child: Image.network(
                                           user!.profileImage!,
                                           fit: BoxFit.cover,
-                                          errorBuilder: (_, __, ___) => const Icon(
+                                          errorBuilder: (_, __, ___) =>
+                                              const Icon(
                                             Icons.person,
                                             size: 50,
                                             color: AppColors.primary,
@@ -91,9 +92,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   decoration: BoxDecoration(
                                     color: AppColors.primary,
                                     shape: BoxShape.circle,
-                                    border: Border.all(color: Colors.white, width: 2),
+                                    border: Border.all(
+                                        color: Colors.white, width: 2),
                                   ),
-                                  child: const Icon(Icons.camera_alt, size: 16, color: Colors.white),
+                                  child: const Icon(Icons.camera_alt,
+                                      size: 16, color: Colors.white),
                                 ),
                               ),
                             ],
@@ -113,21 +116,31 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         // Email
                         Text(
                           user?.email ?? 'email@example.com',
-                          style: const TextStyle(fontSize: 14, color: AppColors.textSecondary),
+                          style: const TextStyle(
+                              fontSize: 14, color: AppColors.textSecondary),
                         ),
                         const SizedBox(height: 20),
                         // Stats row
                         Consumer<BookingProvider>(
                           builder: (context, bookingProvider, child) {
-                            final totalBookings = bookingProvider.bookings.length;
-                            final completed = bookingProvider.bookings.where((b) => b.status == 'COMPLETED').length;
+                            final totalBookings =
+                                bookingProvider.bookings.length;
+                            final completed = bookingProvider.bookings
+                                .where((b) => b.status == 'COMPLETED')
+                                .length;
                             return Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
                                 _statItem('$totalBookings', 'Bookings'),
-                                Container(width: 1, height: 40, color: AppColors.softBackground),
+                                Container(
+                                    width: 1,
+                                    height: 40,
+                                    color: AppColors.softBackground),
                                 _statItem('$completed', 'Completed'),
-                                Container(width: 1, height: 40, color: AppColors.softBackground),
+                                Container(
+                                    width: 1,
+                                    height: 40,
+                                    color: AppColors.softBackground),
                                 _statItem('4.9', 'Rating'),
                               ],
                             );
@@ -147,7 +160,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       children: [
                         const Padding(
                           padding: EdgeInsets.only(left: 8, bottom: 12),
-                          child: Text('Account', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.primaryText)),
+                          child: Text('Account',
+                              style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: AppColors.primaryText)),
                         ),
                         _menuCard(
                           context: context,
@@ -186,7 +203,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       children: [
                         const Padding(
                           padding: EdgeInsets.only(left: 8, bottom: 12),
-                          child: Text('More', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.primaryText)),
+                          child: Text('More',
+                              style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: AppColors.primaryText)),
                         ),
                         _menuCard(
                           context: context,
@@ -194,7 +215,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           title: 'Booking History',
                           subtitle: 'View your past rentals',
                           onTap: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => const ViewAllBookingsScreen()));
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const ViewAllBookingsScreen()));
                           },
                         ),
                         const SizedBox(height: 12),
@@ -204,6 +229,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           title: 'Help & Support',
                           subtitle: 'Get assistance',
                           onTap: () => _showHelpSupportDialog(context),
+                        ),
+                        const SizedBox(height: 12),
+                        _menuCard(
+                          context: context,
+                          icon: Icons.privacy_tip_outlined,
+                          title: 'Privacy Policy',
+                          subtitle: 'Read our privacy terms',
+                          onTap: () => _showPrivacyPolicyDialog(context),
                         ),
                         const SizedBox(height: 12),
                         _menuCard(
@@ -239,9 +272,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget _statItem(String value, String label) {
     return Column(
       children: [
-        Text(value, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: AppColors.primaryText)),
+        Text(value,
+            style: const TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: AppColors.primaryText)),
         const SizedBox(height: 4),
-        Text(label, style: const TextStyle(fontSize: 12, color: AppColors.textSecondary)),
+        Text(label,
+            style:
+                const TextStyle(fontSize: 12, color: AppColors.textSecondary)),
       ],
     );
   }
@@ -261,30 +300,48 @@ class _ProfileScreenState extends State<ProfileScreen> {
         decoration: BoxDecoration(
           color: AppColors.cardWhite,
           borderRadius: BorderRadius.circular(16),
-          boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.04), blurRadius: 8, offset: const Offset(0, 4))],
+          boxShadow: [
+            BoxShadow(
+                color: Colors.black.withOpacity(0.04),
+                blurRadius: 8,
+                offset: const Offset(0, 4))
+          ],
         ),
         child: Row(
           children: [
             Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: isDestructive ? Colors.red.withOpacity(0.1) : AppColors.primary.withOpacity(0.1),
+                color: isDestructive
+                    ? Colors.red.withOpacity(0.1)
+                    : AppColors.primary.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: Icon(icon, color: isDestructive ? Colors.red : AppColors.primary, size: 22),
+              child: Icon(icon,
+                  color: isDestructive ? Colors.red : AppColors.primary,
+                  size: 22),
             ),
             const SizedBox(width: 16),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(title, style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: isDestructive ? Colors.red : AppColors.primaryText)),
+                  Text(title,
+                      style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: isDestructive
+                              ? Colors.red
+                              : AppColors.primaryText)),
                   const SizedBox(height: 2),
-                  Text(subtitle, style: const TextStyle(fontSize: 12, color: AppColors.textSecondary)),
+                  Text(subtitle,
+                      style: const TextStyle(
+                          fontSize: 12, color: AppColors.textSecondary)),
                 ],
               ),
             ),
-            Icon(Icons.chevron_right, color: AppColors.textSecondary.withOpacity(0.5)),
+            Icon(Icons.chevron_right,
+                color: AppColors.textSecondary.withOpacity(0.5)),
           ],
         ),
       ),
@@ -299,19 +356,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
         padding: const EdgeInsets.all(24),
         decoration: const BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.only(topLeft: Radius.circular(24), topRight: Radius.circular(24)),
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(24), topRight: Radius.circular(24)),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text('Change Profile Photo', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            const Text('Change Profile Photo',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             const SizedBox(height: 24),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                _imageOption(Icons.camera_alt, 'Camera', () => Navigator.pop(context)),
-                _imageOption(Icons.photo_library, 'Gallery', () => Navigator.pop(context)),
-                _imageOption(Icons.delete, 'Remove', () => Navigator.pop(context)),
+                _imageOption(
+                    Icons.camera_alt, 'Camera', () => Navigator.pop(context)),
+                _imageOption(Icons.photo_library, 'Gallery',
+                    () => Navigator.pop(context)),
+                _imageOption(
+                    Icons.delete, 'Remove', () => Navigator.pop(context)),
               ],
             ),
             const SizedBox(height: 16),
@@ -328,11 +390,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
         children: [
           Container(
             padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(color: AppColors.softBackground, borderRadius: BorderRadius.circular(16)),
+            decoration: BoxDecoration(
+                color: AppColors.softBackground,
+                borderRadius: BorderRadius.circular(16)),
             child: Icon(icon, color: AppColors.primary, size: 28),
           ),
           const SizedBox(height: 8),
-          Text(label, style: const TextStyle(fontSize: 12, color: AppColors.textSecondary)),
+          Text(label,
+              style: const TextStyle(
+                  fontSize: 12, color: AppColors.textSecondary)),
         ],
       ),
     );
@@ -365,7 +431,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
       context: context,
       builder: (context) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: const Text('Edit Profile', style: TextStyle(fontWeight: FontWeight.bold)),
+        title: const Text('Edit Profile',
+            style: TextStyle(fontWeight: FontWeight.bold)),
         content: Form(
           key: formKey,
           child: Column(
@@ -373,7 +440,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
             children: [
               TextFormField(
                 controller: nameController,
-                decoration: const InputDecoration(labelText: 'Full Name', prefixIcon: Icon(Icons.person_outline)),
+                decoration: const InputDecoration(
+                    labelText: 'Full Name',
+                    prefixIcon: Icon(Icons.person_outline)),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter your full name';
@@ -397,11 +466,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
+          TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Cancel')),
           ElevatedButton(
             onPressed: () async {
               if (!formKey.currentState!.validate()) return;
-              await authProvider.updateProfile(fullName: nameController.text, phone: phoneController.text);
+              await authProvider.updateProfile(
+                  fullName: nameController.text, phone: phoneController.text);
               Navigator.pop(context);
               _showSnackBar(context, 'Profile updated successfully');
             },
@@ -422,29 +494,49 @@ class _ProfileScreenState extends State<ProfileScreen> {
       context: context,
       builder: (context) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: const Text('Change Password', style: TextStyle(fontWeight: FontWeight.bold)),
+        title: const Text('Change Password',
+            style: TextStyle(fontWeight: FontWeight.bold)),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            TextField(controller: currentController, obscureText: true, decoration: const InputDecoration(labelText: 'Current Password')),
+            TextField(
+                controller: currentController,
+                obscureText: true,
+                decoration:
+                    const InputDecoration(labelText: 'Current Password')),
             const SizedBox(height: 16),
-            TextField(controller: newController, obscureText: true, decoration: const InputDecoration(labelText: 'New Password')),
+            TextField(
+                controller: newController,
+                obscureText: true,
+                decoration: const InputDecoration(labelText: 'New Password')),
             const SizedBox(height: 16),
-            TextField(controller: confirmController, obscureText: true, decoration: const InputDecoration(labelText: 'Confirm Password')),
+            TextField(
+                controller: confirmController,
+                obscureText: true,
+                decoration:
+                    const InputDecoration(labelText: 'Confirm Password')),
           ],
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
+          TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Cancel')),
           ElevatedButton(
             onPressed: () async {
               if (newController.text != confirmController.text) {
                 _showSnackBar(context, 'Passwords do not match');
                 return;
               }
-              final authProvider = Provider.of<AuthProvider>(context, listen: false);
-              final success = await authProvider.changePassword(currentController.text, newController.text);
+              final authProvider =
+                  Provider.of<AuthProvider>(context, listen: false);
+              final success = await authProvider.changePassword(
+                  currentController.text, newController.text);
               Navigator.pop(context);
-              _showSnackBar(context, success ? 'Password changed successfully' : 'Failed to change password');
+              _showSnackBar(
+                  context,
+                  success
+                      ? 'Password changed successfully'
+                      : 'Failed to change password');
             },
             style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary),
             child: const Text('Change', style: TextStyle(color: Colors.white)),
@@ -459,21 +551,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
       context: context,
       builder: (context) => StatefulBuilder(
         builder: (context, setState) => AlertDialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-          title: const Text('Notification Settings', style: TextStyle(fontWeight: FontWeight.bold)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          title: const Text('Notification Settings',
+              style: TextStyle(fontWeight: FontWeight.bold)),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: notificationStatus.keys.map((key) {
               return SwitchListTile(
                 title: Text(key),
                 value: notificationStatus[key]!,
-                onChanged: (value) => setState(() => notificationStatus[key] = value),
+                onChanged: (value) =>
+                    setState(() => notificationStatus[key] = value),
                 activeColor: AppColors.primary,
               );
             }).toList(),
           ),
           actions: [
-            TextButton(onPressed: () => Navigator.pop(context), child: const Text('Done')),
+            TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('Done')),
           ],
         ),
       ),
@@ -485,22 +582,149 @@ class _ProfileScreenState extends State<ProfileScreen> {
       context: context,
       builder: (context) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: const Text('Help & Support', style: TextStyle(fontWeight: FontWeight.bold)),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _supportOption(Icons.email, 'Email Support', 'support@autora.com'),
-            const SizedBox(height: 16),
-            _supportOption(Icons.phone, 'Phone Support', '+1 (555) 123-4567'),
-            const SizedBox(height: 16),
-            _supportOption(Icons.chat, 'Live Chat', 'Available 24/7'),
-          ],
+        title: const Text(
+          'Help & Support',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: AppColors.primaryText,
+          ),
+        ),
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _supportOption(
+                  Icons.email, 'Email Support', 'support@autora.com'),
+              const SizedBox(height: 16),
+              _supportOption(Icons.phone, 'Phone Support', '+1 (555) 123-4567'),
+              const SizedBox(height: 16),
+              _supportOption(Icons.chat, 'Live Chat', 'Available 24/7'),
+              const SizedBox(height: 16),
+              // FAQ Option
+              ListTile(
+                contentPadding: EdgeInsets.zero,
+                leading:
+                    const Icon(Icons.help_outline, color: AppColors.primary),
+                title: const Text('FAQ'),
+                subtitle: const Text('Common questions'),
+                onTap: () {
+                  Navigator.pop(context);
+                  _showFAQDialog(context);
+                },
+              ),
+            ],
+          ),
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Close')),
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text(
+              'Close',
+              style: TextStyle(
+                color: AppColors.primary,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
         ],
       ),
+    );
+  }
+
+  void _showFAQDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: const Text(
+          'Frequently Asked Questions',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: AppColors.primaryText,
+          ),
+        ),
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _faqItem(
+                question: 'How do I book a car?',
+                answer:
+                    'Browse available cars, select your preferred vehicle, choose pickup/return dates, and complete the booking with your payment method.',
+              ),
+              const SizedBox(height: 16),
+              _faqItem(
+                question: 'What documents do I need?',
+                answer:
+                    'You need a valid driver\'s license, national ID or passport, and a credit card in your name for the security deposit.',
+              ),
+              const SizedBox(height: 16),
+              _faqItem(
+                question: 'Can I cancel my booking?',
+                answer:
+                    'Yes, you can cancel up to 24 hours before pickup for a full refund. Cancellations within 24 hours may incur a fee.',
+              ),
+              const SizedBox(height: 16),
+              _faqItem(
+                question: 'What is included in the rental?',
+                answer:
+                    'All rentals include basic insurance, unlimited mileage, and 24/7 roadside assistance.',
+              ),
+              const SizedBox(height: 16),
+              _faqItem(
+                question: 'How do I extend my rental?',
+                answer:
+                    'Contact us via phone or email at least 24 hours before your return date to extend your rental period.',
+              ),
+              const SizedBox(height: 16),
+              _faqItem(
+                question: 'What happens if the car breaks down?',
+                answer:
+                    'Call our 24/7 roadside assistance immediately. We\'ll arrange repairs or provide a replacement vehicle at no extra cost.',
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text(
+              'Close',
+              style: TextStyle(
+                color: AppColors.primary,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _faqItem({required String question, required String answer}) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          question,
+          style: const TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+            color: AppColors.primaryText,
+          ),
+        ),
+        const SizedBox(height: 6),
+        Text(
+          answer,
+          style: const TextStyle(
+            fontSize: 13,
+            color: AppColors.textSecondary,
+            height: 1.4,
+          ),
+        ),
+      ],
     );
   }
 
@@ -513,10 +737,66 @@ class _ProfileScreenState extends State<ProfileScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(title, style: const TextStyle(fontWeight: FontWeight.w600)),
-            Text(subtitle, style: const TextStyle(fontSize: 12, color: AppColors.textSecondary)),
+            Text(subtitle,
+                style: const TextStyle(
+                    fontSize: 12, color: AppColors.textSecondary)),
           ],
         ),
       ],
+    );
+  }
+
+  void _showPrivacyPolicyDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: const Text(
+          'Privacy Policy',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: AppColors.primaryText,
+          ),
+        ),
+        content: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                'Last updated: January 10, 2026\n\n'
+                '1. Information We Collect\n'
+                'We collect information you provide directly to us, including name, email, phone number, and payment details.\n\n'
+                '2. How We Use Your Information\n'
+                'We use your information to provide and improve our services, process bookings, and communicate with you.\n\n'
+                '3. Data Security\n'
+                'We implement security measures to protect your personal information from unauthorized access.\n\n'
+                '4. Your Rights\n'
+                'You have the right to access, update, or delete your personal information at any time.\n\n'
+                '5. Contact Us\n'
+                'For privacy concerns, contact us at privacy@rentalapp.com',
+                style: TextStyle(
+                  fontSize: 13,
+                  color: AppColors.textSecondary,
+                  height: 1.5,
+                ),
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text(
+              'Close',
+              style: TextStyle(
+                color: AppColors.primary,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -525,25 +805,35 @@ class _ProfileScreenState extends State<ProfileScreen> {
       context: context,
       builder: (context) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: const Text('About Autora', style: TextStyle(fontWeight: FontWeight.bold)),
+        title: const Text('About Autora',
+            style: TextStyle(fontWeight: FontWeight.bold)),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Container(
               padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(color: AppColors.primary, borderRadius: BorderRadius.circular(20)),
-              child: const Icon(Icons.car_rental, size: 40, color: Colors.white),
+              decoration: BoxDecoration(
+                  color: AppColors.primary,
+                  borderRadius: BorderRadius.circular(20)),
+              child:
+                  const Icon(Icons.car_rental, size: 40, color: Colors.white),
             ),
             const SizedBox(height: 16),
-            const Text('Autora', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+            const Text('Autora',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
             const SizedBox(height: 8),
-            const Text('Version 1.0.0', style: TextStyle(color: AppColors.textSecondary)),
+            const Text('Version 1.0.0',
+                style: TextStyle(color: AppColors.textSecondary)),
             const SizedBox(height: 16),
-            const Text('Your trusted car rental partner.', textAlign: TextAlign.center, style: TextStyle(color: AppColors.textSecondary)),
+            const Text('Your trusted car rental partner.',
+                textAlign: TextAlign.center,
+                style: TextStyle(color: AppColors.textSecondary)),
           ],
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Close')),
+          TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Close')),
         ],
       ),
     );
@@ -554,13 +844,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
       context: context,
       builder: (context) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: const Text('Logout', style: TextStyle(fontWeight: FontWeight.bold)),
+        title:
+            const Text('Logout', style: TextStyle(fontWeight: FontWeight.bold)),
         content: const Text('Are you sure you want to logout?'),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
+          TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Cancel')),
           ElevatedButton(
             onPressed: () async {
-              final authProvider = Provider.of<AuthProvider>(context, listen: false);
+              final authProvider =
+                  Provider.of<AuthProvider>(context, listen: false);
               await authProvider.logout();
               Navigator.pop(context);
               Navigator.pushAndRemoveUntil(
@@ -579,7 +873,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   void _showSnackBar(BuildContext context, String message) {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message), behavior: SnackBarBehavior.floating, backgroundColor: AppColors.primary),
+      SnackBar(
+          content: Text(message),
+          behavior: SnackBarBehavior.floating,
+          backgroundColor: AppColors.primary),
     );
   }
 }
