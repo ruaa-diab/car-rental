@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../core/theme/app_colors.dart';
-import '../../../core/theme/app_text_styles.dart';
+import '../../../core/widgets/admin_bottom_nav.dart';
 import '../../../core/providers/auth_provider.dart';
 import '../../../core/services/api_service.dart';
 import '../../auth/login/login_screen.dart';
@@ -15,67 +15,54 @@ class AdminProfileScreen extends StatefulWidget {
 }
 
 class _AdminProfileScreenState extends State<AdminProfileScreen> {
+  Map<String, bool> notificationStatus = {
+    'System Alerts': true,
+    'Employee Updates': true,
+    'Report Notifications': false,
+  };
+
   @override
   Widget build(BuildContext context) {
-    final authProvider = Provider.of<AuthProvider>(context);
-    final user = authProvider.user;
-
-    final fullName = user?.fullName ?? 'Admin Manager';
-    final email = user?.email ?? 'admin@autora.com';
-    final phone = user?.phone ?? '+970599123456';
-    final role = user?.role ?? 'ADMIN';
-    final initials = _getInitials(fullName);
-
     return Scaffold(
       backgroundColor: AppColors.softBackground,
-      appBar: AppBar(
-        title: const Text('My Profile'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.edit),
-            onPressed: () async {
-              final result = await Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const EditProfileScreen()),
-              );
-              if (result == true && mounted) {
-                setState(() {});
-              }
-            },
-          ),
-        ],
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            // Profile Header
-            _buildProfileHeader(fullName, email, initials, role),
-            const SizedBox(height: 24),
+      body: SafeArea(
+        child: Consumer<AuthProvider>(
+          builder: (context, authProvider, child) {
+            final user = authProvider.user;
+            final fullName = user?.fullName ?? 'Admin Manager';
+            final email = user?.email ?? 'admin@autora.com';
+            final phone = user?.phone ?? '+970599123456';
+            final role = user?.role ?? 'ADMIN';
 
-            // Stats Cards
-            _buildStatsSection(),
-            const SizedBox(height: 24),
+            return SingleChildScrollView(
+              child: Column(
+                children: [
+                  // Header with profile info
+                  _buildProfileHeader(fullName, email, role),
 
-            // Personal Information
-            _buildSectionTitle('Personal Information'),
-            const SizedBox(height: 12),
-            _buildPersonalInfo(fullName, phone),
-            const SizedBox(height: 24),
+                  const SizedBox(height: 24),
 
-            // Account Information
-            _buildSectionTitle('Account Information'),
-            const SizedBox(height: 12),
-            _buildAccountInfo(email, role),
-            const SizedBox(height: 24),
+                  // Stats row
+                  _buildStatsSection(),
 
-            // Quick Actions
-            _buildSectionTitle('Quick Actions'),
-            const SizedBox(height: 12),
-            _buildQuickActions(context),
-          ],
+                  const SizedBox(height: 24),
+
+                  // Account Section
+                  _buildAccountSection(fullName, phone),
+
+                  const SizedBox(height: 24),
+
+                  // More Section
+                  _buildMoreSection(),
+
+                  const SizedBox(height: 24),
+                ],
+              ),
+            );
+          },
         ),
       ),
+      bottomNavigationBar: const AdminBottomNav(currentIndex: 4),
     );
   }
 
@@ -101,112 +88,89 @@ class _AdminProfileScreenState extends State<AdminProfileScreen> {
     }
   }
 
-  Widget _buildProfileHeader(String fullName, String email, String initials, String role) {
+  // ==================== PROFILE HEADER ====================
+  Widget _buildProfileHeader(String fullName, String email, String role) {
     return Container(
+      width: double.infinity,
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            AppColors.primary,
-            AppColors.primary.withOpacity(0.8),
-          ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
+        color: AppColors.cardWhite,
+        borderRadius: const BorderRadius.only(
+          bottomLeft: Radius.circular(30),
+          bottomRight: Radius.circular(30),
         ),
-        borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: AppColors.primary.withOpacity(0.3),
-            blurRadius: 15,
-            offset: const Offset(0, 8),
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 5),
           ),
         ],
       ),
       child: Column(
         children: [
-          // Avatar
-          Stack(
-            children: [
-              Container(
-                width: 100,
-                height: 100,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(color: Colors.white, width: 4),
-                  color: Colors.white,
-                ),
-                child: CircleAvatar(
-                  backgroundColor: const Color(0xFFE8E8FF),
-                  child: Text(
-                    initials,
-                    style: const TextStyle(
-                      fontSize: 36,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFF5D5FEF),
-                    ),
-                  ),
+          const SizedBox(height: 20),
+          // Profile picture with initials
+          Container(
+            width: 100,
+            height: 100,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: AppColors.softBackground,
+            ),
+            child: Center(
+              child: Text(
+                _getInitials(fullName),
+                style: const TextStyle(
+                  fontSize: 40,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.primary,
                 ),
               ),
-              Positioned(
-                bottom: 0,
-                right: 0,
-                child: Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: AppColors.success,
-                    shape: BoxShape.circle,
-                    border: Border.all(color: Colors.white, width: 2),
-                  ),
-                  child: const Icon(
-                    Icons.verified,
-                    size: 16,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            ],
+            ),
           ),
           const SizedBox(height: 16),
-
           // Name
           Text(
             fullName,
             style: const TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.bold,
-              color: Colors.white,
+              color: AppColors.primaryText,
             ),
           ),
           const SizedBox(height: 4),
-
           // Email
           Text(
             email,
             style: const TextStyle(
               fontSize: 14,
-              color: Colors.white70,
+              color: AppColors.textSecondary,
             ),
           ),
-          const SizedBox(height: 16),
-
-          // Badge
+          const SizedBox(height: 12),
+          // Role badge
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.2),
+              color: AppColors.primary.withOpacity(0.1),
               borderRadius: BorderRadius.circular(20),
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Icon(Icons.admin_panel_settings, size: 16, color: Colors.white),
+                const Icon(
+                  Icons.admin_panel_settings,
+                  size: 16,
+                  color: AppColors.primary,
+                ),
                 const SizedBox(width: 8),
                 Text(
                   _formatRole(role),
                   style: const TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
-                    color: Colors.white,
+                    color: AppColors.primary,
                   ),
                 ),
               ],
@@ -217,36 +181,29 @@ class _AdminProfileScreenState extends State<AdminProfileScreen> {
     );
   }
 
+  // ==================== STATS SECTION ====================
   Widget _buildStatsSection() {
-    return Row(
-      children: [
-        Expanded(
-          child: _buildStatCard(
-            icon: Icons.calendar_today,
-            label: 'Member Since',
-            value: 'Jan 2024',
-            color: AppColors.primary,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Row(
+        children: [
+          Expanded(
+            child: _buildStatCard('Jan 2024', 'Member Since'),
           ),
-        ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: _buildStatCard(
-            icon: Icons.schedule,
-            label: 'Last Login',
-            value: 'Today',
-            color: AppColors.success,
+          const SizedBox(width: 12),
+          Expanded(
+            child: _buildStatCard('Today', 'Last Login'),
           ),
-        ),
-      ],
+          const SizedBox(width: 12),
+          Expanded(
+            child: _buildStatCard('Admin', 'Role'),
+          ),
+        ],
+      ),
     );
   }
 
-  Widget _buildStatCard({
-    required IconData icon,
-    required String label,
-    required String value,
-    required Color color,
-  }) {
+  Widget _buildStatCard(String value, String label) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -255,34 +212,28 @@ class _AdminProfileScreenState extends State<AdminProfileScreen> {
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.04),
-            blurRadius: 10,
+            blurRadius: 8,
             offset: const Offset(0, 4),
           ),
         ],
       ),
       child: Column(
         children: [
-          Container(
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: color.withOpacity(0.1),
-              shape: BoxShape.circle,
-            ),
-            child: Icon(icon, color: color, size: 24),
-          ),
-          const SizedBox(height: 12),
           Text(
             value,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
-              color: color,
+              color: AppColors.primaryText,
             ),
           ),
           const SizedBox(height: 4),
           Text(
             label,
-            style: AppTextStyles.caption.copyWith(fontSize: 11),
+            style: const TextStyle(
+              fontSize: 11,
+              color: AppColors.textSecondary,
+            ),
             textAlign: TextAlign.center,
           ),
         ],
@@ -290,67 +241,268 @@ class _AdminProfileScreenState extends State<AdminProfileScreen> {
     );
   }
 
-  Widget _buildPersonalInfo(String fullName, String phone) {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: AppColors.cardWhite,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.04),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
+  // ==================== ACCOUNT SECTION ====================
+  Widget _buildAccountSection(String fullName, String phone) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildInfoRow(Icons.person, 'Full Name', fullName),
-          const Divider(height: 24),
-          _buildInfoRow(Icons.phone, 'Phone Number', phone),
-          const Divider(height: 24),
-          _buildInfoRow(Icons.location_on, 'Location', 'Palestine'),
+          const Padding(
+            padding: EdgeInsets.only(left: 8, bottom: 12),
+            child: Text(
+              'Account',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: AppColors.primaryText,
+              ),
+            ),
+          ),
+          _menuCard(
+            context: context,
+            icon: Icons.person_outline,
+            title: 'Edit Profile',
+            subtitle: 'Update your personal information',
+            onTap: () async {
+              final result = await Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const EditProfileScreen(),
+                ),
+              );
+              if (result == true && mounted) {
+                setState(() {});
+              }
+            },
+          ),
+          const SizedBox(height: 12),
+          _menuCard(
+            context: context,
+            icon: Icons.lock_outline,
+            title: 'Change Password',
+            subtitle: 'Update your password',
+            onTap: () => _showChangePasswordDialog(context),
+          ),
+          const SizedBox(height: 12),
+          _menuCard(
+            context: context,
+            icon: Icons.notifications_outlined,
+            title: 'Notifications',
+            subtitle: 'Manage notification preferences',
+            onTap: () => _showNotificationsDialog(context),
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildAccountInfo(String email, String role) {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: AppColors.cardWhite,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.04),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
+  // ==================== MORE SECTION ====================
+  Widget _buildMoreSection() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Padding(
+            padding: EdgeInsets.only(left: 8, bottom: 12),
+            child: Text(
+              'More',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: AppColors.primaryText,
+              ),
+            ),
+          ),
+          _menuCard(
+            context: context,
+            icon: Icons.security,
+            title: 'Security',
+            subtitle: 'Two-factor authentication & security',
+            onTap: () => _showSecurityDialog(context),
+          ),
+          const SizedBox(height: 12),
+          _menuCard(
+            context: context,
+            icon: Icons.download,
+            title: 'Download My Data',
+            subtitle: 'Export your account data',
+            onTap: () => _showSnackBar(context, 'Data export started...'),
+          ),
+          const SizedBox(height: 12),
+          _menuCard(
+            context: context,
+            icon: Icons.help_outline,
+            title: 'Help & Support',
+            subtitle: 'Get assistance',
+            onTap: () => _showHelpSupportDialog(context),
+          ),
+          const SizedBox(height: 12),
+          _menuCard(
+            context: context,
+            icon: Icons.info_outline,
+            title: 'About',
+            subtitle: 'App version and info',
+            onTap: () => _showAboutDialog(context),
+          ),
+          const SizedBox(height: 12),
+          _menuCard(
+            context: context,
+            icon: Icons.logout,
+            title: 'Logout',
+            subtitle: 'Sign out of your account',
+            onTap: () => _showLogoutDialog(context),
+            isDestructive: true,
           ),
         ],
       ),
-      child: Column(
-        children: [
-          _buildInfoRow(Icons.email, 'Email', email),
-          const Divider(height: 24),
-          _buildInfoRow(Icons.shield, 'Role', _formatRole(role)),
-          const Divider(height: 24),
-          _buildInfoRow(Icons.security, 'Two-Factor Auth', 'Enabled',
-            trailing: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+    );
+  }
+
+  // ==================== MENU CARD WIDGET ====================
+  Widget _menuCard({
+    required BuildContext context,
+    required IconData icon,
+    required String title,
+    required String subtitle,
+    required VoidCallback onTap,
+    bool isDestructive = false,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: AppColors.cardWhite,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.04),
+              blurRadius: 8,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: AppColors.success.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(6),
+                color: isDestructive
+                    ? Colors.red.withOpacity(0.1)
+                    : AppColors.primary.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(12),
               ),
-              child: const Text(
-                'Active',
-                style: TextStyle(
-                  fontSize: 11,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.success,
-                ),
+              child: Icon(
+                icon,
+                color: isDestructive ? Colors.red : AppColors.primary,
+                size: 22,
               ),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: isDestructive ? Colors.red : AppColors.primaryText,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    subtitle,
+                    style: const TextStyle(
+                      fontSize: 12,
+                      color: AppColors.textSecondary,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Icon(
+              Icons.chevron_right,
+              color: AppColors.textSecondary.withOpacity(0.5),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // ==================== DIALOGS ====================
+  void _showChangePasswordDialog(BuildContext context) {
+    final currentController = TextEditingController();
+    final newController = TextEditingController();
+    final confirmController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: const Text(
+          'Change Password',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: currentController,
+              obscureText: true,
+              decoration: const InputDecoration(
+                labelText: 'Current Password',
+                prefixIcon: Icon(Icons.lock_outline),
+              ),
+            ),
+            const SizedBox(height: 16),
+            TextField(
+              controller: newController,
+              obscureText: true,
+              decoration: const InputDecoration(
+                labelText: 'New Password',
+                prefixIcon: Icon(Icons.lock),
+              ),
+            ),
+            const SizedBox(height: 16),
+            TextField(
+              controller: confirmController,
+              obscureText: true,
+              decoration: const InputDecoration(
+                labelText: 'Confirm Password',
+                prefixIcon: Icon(Icons.lock),
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              if (newController.text != confirmController.text) {
+                _showSnackBar(context, 'Passwords do not match');
+                return;
+              }
+              if (newController.text.length < 6) {
+                _showSnackBar(context, 'Password must be at least 6 characters');
+                return;
+              }
+              Navigator.pop(context);
+              _showSnackBar(context, 'Password changed successfully');
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.primary,
+            ),
+            child: const Text(
+              'Change',
+              style: TextStyle(color: Colors.white),
             ),
           ),
         ],
@@ -358,17 +510,106 @@ class _AdminProfileScreenState extends State<AdminProfileScreen> {
     );
   }
 
-  Widget _buildInfoRow(IconData icon, String label, String value, {Widget? trailing}) {
+  void _showNotificationsDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => StatefulBuilder(
+        builder: (context, setState) => AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          title: const Text(
+            'Notification Settings',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: notificationStatus.keys.map((key) {
+              return SwitchListTile(
+                title: Text(key),
+                value: notificationStatus[key]!,
+                onChanged: (value) {
+                  setState(() => notificationStatus[key] = value);
+                },
+                activeColor: AppColors.primary,
+              );
+            }).toList(),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Done'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showSecurityDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: const Text(
+          'Security Settings',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _infoRow(
+              icon: Icons.security,
+              label: 'Two-Factor Auth',
+              value: 'Enabled',
+              badge: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  color: AppColors.success.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                child: const Text(
+                  'Active',
+                  style: TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.success,
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+            _infoRow(
+              icon: Icons.devices,
+              label: 'Trusted Devices',
+              value: '3 devices',
+            ),
+            const SizedBox(height: 16),
+            _infoRow(
+              icon: Icons.schedule,
+              label: 'Session Timeout',
+              value: '30 minutes',
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Close'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _infoRow({
+    required IconData icon,
+    required String label,
+    required String value,
+    Widget? badge,
+  }) {
     return Row(
       children: [
-        Container(
-          padding: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            color: AppColors.primary.withOpacity(0.1),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Icon(icon, color: AppColors.primary, size: 20),
-        ),
+        Icon(icon, color: AppColors.primary, size: 20),
         const SizedBox(width: 12),
         Expanded(
           child: Column(
@@ -376,114 +617,134 @@ class _AdminProfileScreenState extends State<AdminProfileScreen> {
             children: [
               Text(
                 label,
-                style: AppTextStyles.caption.copyWith(fontSize: 11),
+                style: const TextStyle(
+                  fontSize: 12,
+                  color: AppColors.textSecondary,
+                ),
               ),
-              const SizedBox(height: 2),
               Text(
                 value,
-                style: AppTextStyles.body.copyWith(fontWeight: FontWeight.w600),
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.primaryText,
+                ),
               ),
             ],
           ),
         ),
-        if (trailing != null) trailing,
+        if (badge != null) badge,
       ],
     );
   }
 
-  Widget _buildQuickActions(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: AppColors.cardWhite,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.04),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Column(
-        children: [
-          _buildActionTile(
-            context,
-            icon: Icons.download,
-            title: 'Download My Data',
-            subtitle: 'Export your account data',
-            color: AppColors.info,
-            onTap: () {
-              _showSnackBar(context, 'Data export started...');
-            },
-          ),
-          const Divider(height: 24),
-          _buildActionTile(
-            context,
-            icon: Icons.logout,
-            title: 'Logout',
-            subtitle: 'Sign out of your account',
-            color: AppColors.error,
-            onTap: () {
-              _showLogoutDialog(context);
-            },
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildActionTile(
-    BuildContext context, {
-    required IconData icon,
-    required String title,
-    required String subtitle,
-    required Color color,
-    required VoidCallback onTap,
-  }) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(12),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 4),
-        child: Row(
+  void _showHelpSupportDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: const Text(
+          'Help & Support',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                color: color.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Icon(icon, color: color, size: 24),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: AppTextStyles.body.copyWith(fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    subtitle,
-                    style: AppTextStyles.caption.copyWith(fontSize: 11),
-                  ),
-                ],
-              ),
-            ),
-            const Icon(Icons.arrow_forward_ios, size: 16, color: AppColors.textSecondary),
+            _supportOption(Icons.email, 'Email Support', 'admin@autora.com'),
+            const SizedBox(height: 16),
+            _supportOption(Icons.phone, 'Phone Support', '+970 599 123 456'),
+            const SizedBox(height: 16),
+            _supportOption(Icons.chat, 'Live Chat', 'Available 24/7'),
           ],
         ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Close'),
+          ),
+        ],
       ),
     );
   }
 
-  Widget _buildSectionTitle(String title) {
-    return Text(
-      title,
-      style: AppTextStyles.sectionTitle.copyWith(fontSize: 18),
+  Widget _supportOption(IconData icon, String title, String subtitle) {
+    return Row(
+      children: [
+        Icon(icon, color: AppColors.primary),
+        const SizedBox(width: 12),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              title,
+              style: const TextStyle(fontWeight: FontWeight.w600),
+            ),
+            Text(
+              subtitle,
+              style: const TextStyle(
+                fontSize: 12,
+                color: AppColors.textSecondary,
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  void _showAboutDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: const Text(
+          'About Autora',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: AppColors.primary,
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: const Icon(
+                Icons.car_rental,
+                size: 40,
+                color: Colors.white,
+              ),
+            ),
+            const SizedBox(height: 16),
+            const Text(
+              'Autora',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 8),
+            const Text(
+              'Version 1.0.0',
+              style: TextStyle(color: AppColors.textSecondary),
+            ),
+            const SizedBox(height: 16),
+            const Text(
+              'Car Rental Management System\nAdmin Portal',
+              textAlign: TextAlign.center,
+              style: TextStyle(color: AppColors.textSecondary),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Close'),
+          ),
+        ],
+      ),
     );
   }
 
@@ -494,7 +755,11 @@ class _AdminProfileScreenState extends State<AdminProfileScreen> {
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('Logout'),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: const Text(
+          'Logout',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
         content: const Text('Are you sure you want to logout?'),
         actions: [
           TextButton(
@@ -512,10 +777,12 @@ class _AdminProfileScreenState extends State<AdminProfileScreen> {
               );
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.error,
-              foregroundColor: Colors.white,
+              backgroundColor: Colors.red,
             ),
-            child: const Text('Logout'),
+            child: const Text(
+              'Logout',
+              style: TextStyle(color: Colors.white),
+            ),
           ),
         ],
       ),
@@ -527,9 +794,6 @@ class _AdminProfileScreenState extends State<AdminProfileScreen> {
       SnackBar(
         content: Text(message),
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
         backgroundColor: AppColors.primary,
       ),
     );
