@@ -47,55 +47,106 @@ class _ProfileScreenState extends State<ProfileScreen> {
     try {
       final authProvider = Provider.of<AuthProvider>(context, listen: false);
       final userId = authProvider.user?.id;
+      final userEmail = authProvider.user?.email;
+
+      print('DEBUG: ========== PROFILE LOADING ==========');
+      print('DEBUG: AuthProvider user: ${authProvider.user}');
+      print('DEBUG: userId: $userId');
+      print('DEBUG: userEmail: $userEmail');
 
       if (userId != null) {
-        final data = await EmployeeService.instance.getEmployeeByUserId(userId);
-        if (mounted) {
-          setState(() {
-            _employeeId = data['id'];
-            employeeData = {
-              'name': data['fullName'] ?? '',
-              'id': 'EMP-${data['id'].toString().padLeft(3, '0')}',
-              'email': data['email'] ?? '',
-              'phone': data['phone'] ?? '',
-              'joinDate': _formatDate(data['hireDate']),
-              'department': data['department'] ?? 'Operations',
-              'rating': data['rating'] ?? 0.0,
-              'tasksCompleted': data['tasksCompleted'] ?? 0,
-            };
-            _isLoading = false;
-          });
+        try {
+          // Try using ApiService directly first
+          final response = await ApiService.instance.get('/employees/user/$userId');
+          print('DEBUG: ========== DIRECT API RESPONSE ==========');
+          print('DEBUG: Response type: ${response.runtimeType}');
+          print('DEBUG: Response: $response');
+          
+          Map<String, dynamic> data;
+          
+          // Handle different response formats
+          if (response is Map<String, dynamic>) {
+            // Check if response has a 'data' wrapper
+            if (response.containsKey('data')) {
+              data = response['data'] as Map<String, dynamic>;
+            } else {
+              data = response;
+            }
+          } else {
+            throw Exception('Unexpected response format: ${response.runtimeType}');
+          }
+          
+          print('DEBUG: Parsed data: $data');
+          print('DEBUG: Data keys: ${data.keys.toList()}');
+          print('DEBUG: =====================================');
+          
+          if (mounted) {
+            setState(() {
+              _employeeId = data['id'];
+              employeeData = {
+                'name': data['fullName'] ?? data['name'] ?? data['userName'] ?? userEmail ?? 'Employee',
+                'id': 'EMP-${(data['id'] ?? 0).toString().padLeft(3, '0')}',
+                'email': data['email'] ?? userEmail ?? 'No email',
+                'phone': data['phone'] ?? data['phoneNumber'] ?? 'No phone',
+                'joinDate': _formatDate(data['hireDate'] ?? data['joinDate'] ?? data['createdAt']),
+                'department': data['department'] ?? data['departmentName'] ?? 'Operations',
+                'rating': (data['rating'] ?? data['performanceRating'] ?? 0.0).toDouble(),
+                'tasksCompleted': data['tasksCompleted'] ?? data['completedTasks'] ?? 0,
+              };
+              _isLoading = false;
+            });
+            print('DEBUG: Final employeeData: $employeeData');
+          }
+        } catch (apiError) {
+          print('DEBUG: API error: $apiError');
+          print('DEBUG: Error type: ${apiError.runtimeType}');
+          
+          // Try to use auth user data as fallback
+          if (mounted) {
+            setState(() {
+              employeeData = {
+                'name': authProvider.user?.email?.split('@')[0] ?? 'Employee',
+                'id': 'EMP-${(userId).toString().padLeft(3, '0')}',
+                'email': authProvider.user?.email ?? 'No email',
+                'phone': 'Not set',
+                'joinDate': 'N/A',
+                'department': 'Operations',
+                'rating': 0.0,
+                'tasksCompleted': 0,
+              };
+              _isLoading = false;
+            });
+            _showSnackBar('Could not load employee details. Using basic profile.');
+          }
         }
       } else {
-        setState(() => _isLoading = false);
+        print('DEBUG: No userId found in AuthProvider');
+        if (mounted) {
+          setState(() => _isLoading = false);
+          _showSnackBar('Error: User ID not found. Please login again.');
+        }
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
+      print('DEBUG: Outer error loading employee data: $e');
+      print('DEBUG: Stack trace: $stackTrace');
       if (mounted) {
         setState(() => _isLoading = false);
+        _showSnackBar('Failed to load profile: $e');
       }
     }
   }
 
   String _formatDate(String? dateStr) {
-    if (dateStr == null) return 'N/A';
+    if (dateStr == null || dateStr.isEmpty) return 'N/A';
     try {
       final date = DateTime.parse(dateStr);
       final months = [
-        'Jan',
-        'Feb',
-        'Mar',
-        'Apr',
-        'May',
-        'Jun',
-        'Jul',
-        'Aug',
-        'Sep',
-        'Oct',
-        'Nov',
-        'Dec'
+        'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+        'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
       ];
       return '${months[date.month - 1]} ${date.year}';
     } catch (e) {
+      print('DEBUG: Error formatting date: $dateStr, error: $e');
       return 'N/A';
     }
   }
@@ -118,19 +169,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-                    // Header with profile info
                     _buildProfileHeader(),
-
                     const SizedBox(height: 24),
-
-                    // Account Section
                     _buildAccountSection(),
-
                     const SizedBox(height: 24),
-
-                    // More Section
                     _buildMoreSection(),
-
                     const SizedBox(height: 24),
                   ],
                 ),
@@ -140,7 +183,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  // ==================== PROFILE HEADER ====================
   Widget _buildProfileHeader() {
     return Container(
       width: double.infinity,
@@ -162,7 +204,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
       child: Column(
         children: [
           const SizedBox(height: 20),
-          // Profile picture
           Container(
             width: 100,
             height: 100,
@@ -182,9 +223,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
           ),
           const SizedBox(height: 16),
-          // Name
           Text(
-            employeeData['name'],
+            employeeData['name']?.toString() ?? 'Employee',
             style: const TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.bold,
@@ -192,21 +232,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
           ),
           const SizedBox(height: 4),
-          // Email
           Text(
-            employeeData['email'],
+            employeeData['email']?.toString() ?? 'No email',
             style: const TextStyle(
               fontSize: 14,
               color: AppColors.textSecondary,
             ),
           ),
           const SizedBox(height: 20),
-          // Stats row
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              _statItem(
-                  employeeData['tasksCompleted'].toString(), 'Tasks Done'),
+              _statItem(employeeData['tasksCompleted'].toString(), 'Tasks Done'),
               Container(
                 width: 1,
                 height: 40,
@@ -218,7 +255,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 height: 40,
                 color: AppColors.softBackground,
               ),
-              _statItem(employeeData['joinDate'], 'Since'),
+              _statItem(employeeData['joinDate'].toString(), 'Since'),
             ],
           ),
         ],
@@ -249,7 +286,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  // ==================== ACCOUNT SECTION ====================
   Widget _buildAccountSection() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -295,7 +331,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  // ==================== MORE SECTION ====================
   Widget _buildMoreSection() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -350,7 +385,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  // ==================== MENU CARD WIDGET ====================
   Widget _menuCard({
     required BuildContext context,
     required IconData icon,
@@ -424,12 +458,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  // ==================== DIALOGS ====================
   void _showEditProfileDialog(BuildContext context) {
-    final nameController = TextEditingController(text: employeeData['name']);
-    final phoneController = TextEditingController(text: employeeData['phone']);
-    final departmentController =
-        TextEditingController(text: employeeData['department']);
+    final nameController = TextEditingController(text: employeeData['name']?.toString() ?? '');
+    final phoneController = TextEditingController(text: employeeData['phone']?.toString() ?? '');
+    final departmentController = TextEditingController(text: employeeData['department']?.toString() ?? '');
     final formKey = GlobalKey<FormState>();
 
     showDialog(
@@ -501,6 +533,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
               if (!formKey.currentState!.validate()) return;
 
               Navigator.pop(dialogContext);
+              
+              // Show loading
+              _showSnackBar('Updating profile...');
+              
               await _updateProfile({
                 'fullName': nameController.text,
                 'phone': phoneController.text,
@@ -532,13 +568,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Future<void> _updateProfile(Map<String, dynamic> data) async {
-    if (_employeeId == null) return;
+    if (_employeeId == null) {
+      _showSnackBar('Error: Employee ID not found');
+      return;
+    }
 
     try {
+      print('DEBUG: Updating employee $_employeeId with data: $data');
       await EmployeeService.instance.updateEmployee(_employeeId!, data);
       _showSnackBar('Profile updated successfully');
-      _loadEmployeeData();
+      await _loadEmployeeData(); // Reload data
     } catch (e) {
+      print('DEBUG: Error updating profile: $e');
       _showSnackBar('Failed to update profile: $e');
     }
   }
@@ -623,8 +664,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       context: context,
       builder: (context) => StatefulBuilder(
         builder: (context, setState) => AlertDialog(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           title: const Text(
             'Notification Settings',
             style: TextStyle(fontWeight: FontWeight.bold),
@@ -667,18 +707,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _detailRow(
-                  Icons.badge_outlined, 'Employee ID', employeeData['id']),
+              _detailRow(Icons.badge_outlined, 'Employee ID', employeeData['id']?.toString() ?? 'N/A'),
               const SizedBox(height: 12),
-              _detailRow(Icons.email_outlined, 'Email', employeeData['email']),
+              _detailRow(Icons.email_outlined, 'Email', employeeData['email']?.toString() ?? 'N/A'),
               const SizedBox(height: 12),
-              _detailRow(Icons.phone_outlined, 'Phone', employeeData['phone']),
+              _detailRow(Icons.phone_outlined, 'Phone', employeeData['phone']?.toString() ?? 'N/A'),
               const SizedBox(height: 12),
-              _detailRow(Icons.business_outlined, 'Department',
-                  employeeData['department']),
+              _detailRow(Icons.business_outlined, 'Department', employeeData['department']?.toString() ?? 'N/A'),
               const SizedBox(height: 12),
-              _detailRow(
-                  Icons.calendar_today, 'Join Date', employeeData['joinDate']),
+              _detailRow(Icons.calendar_today, 'Join Date', employeeData['joinDate']?.toString() ?? 'N/A'),
             ],
           ),
         ),
@@ -761,16 +798,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              title,
-              style: const TextStyle(fontWeight: FontWeight.w600),
-            ),
+            Text(title, style: const TextStyle(fontWeight: FontWeight.w600)),
             Text(
               subtitle,
-              style: const TextStyle(
-                fontSize: 12,
-                color: AppColors.textSecondary,
-              ),
+              style: const TextStyle(fontSize: 12, color: AppColors.textSecondary),
             ),
           ],
         ),
@@ -796,19 +827,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 color: AppColors.primary,
                 borderRadius: BorderRadius.circular(20),
               ),
-              child: const Icon(
-                Icons.car_rental,
-                size: 40,
-                color: Colors.white,
-              ),
+              child: const Icon(Icons.car_rental, size: 40, color: Colors.white),
             ),
             const SizedBox(height: 16),
             const Text(
               'AutoRa',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
             const Text(
@@ -861,9 +885,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 (route) => false,
               );
             },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.red,
-            ),
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
             child: const Text(
               'Logout',
               style: TextStyle(color: Colors.white),
@@ -875,6 +897,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   void _showSnackBar(String message) {
+    if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),

@@ -3,9 +3,14 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_text_styles.dart';
 
 class TaskDetailsScreen extends StatefulWidget {
-  final int taskId;
+  final Map<String, dynamic> task;
+  final Function(Map<String, dynamic>) onTaskUpdated;
 
-  const TaskDetailsScreen({super.key, required this.taskId});
+  const TaskDetailsScreen({
+    super.key,
+    required this.task,
+    required this.onTaskUpdated,
+  });
 
   @override
   State<TaskDetailsScreen> createState() => _TaskDetailsScreenState();
@@ -14,64 +19,10 @@ class TaskDetailsScreen extends StatefulWidget {
 class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
   late Map<String, dynamic> task;
 
-  // Sample task data based on task types
-  final Map<int, Map<String, dynamic>> _tasksData = {
-    1: {
-      'id': 1,
-      'type': 'SHIFT',
-      'title': 'Morning Shift',
-      'description': 'Front desk duty at main branch. Handle customer inquiries and process bookings.',
-      'date': 'Today',
-      'time': '08:00 AM',
-      'endTime': '04:00 PM',
-      'location': 'Main Branch - Ramallah',
-      'status': 'in_progress',
-      'priority': 'normal',
-      'notes': 'Remember to check pending reservations for tomorrow.',
-    },
-    2: {
-      'id': 2,
-      'type': 'MAINTENANCE',
-      'title': 'Oil Change - Toyota Camry',
-      'description': 'Regular oil change and filter replacement. Check tire pressure and fluid levels.',
-      'date': 'Today',
-      'time': '10:00 AM',
-      'location': 'Workshop',
-      'vehiclePlate': 'ABC-123',
-      'status': 'pending',
-      'priority': 'high',
-      'notes': 'Customer reported slight engine noise. Please inspect.',
-    },
-    3: {
-      'id': 3,
-      'type': 'CLEANING',
-      'title': 'Deep Clean - Honda CR-V',
-      'description': 'Full interior and exterior cleaning. Vacuum, wash, and wax.',
-      'date': 'Today',
-      'time': '02:00 PM',
-      'location': 'Cleaning Bay',
-      'vehiclePlate': 'XYZ-789',
-      'status': 'pending',
-      'priority': 'normal',
-    },
-    4: {
-      'id': 4,
-      'type': 'INSPECTION',
-      'title': 'Vehicle Inspection - BMW X5',
-      'description': 'Pre-rental inspection. Check all systems, document condition with photos.',
-      'date': 'Tomorrow',
-      'time': '09:00 AM',
-      'location': 'Main Branch',
-      'vehiclePlate': 'BMW-555',
-      'status': 'pending',
-      'priority': 'normal',
-    },
-  };
-
   @override
   void initState() {
     super.initState();
-    task = _tasksData[widget.taskId] ?? _tasksData[1]!;
+    task = Map<String, dynamic>.from(widget.task);
   }
 
   IconData _getTaskIcon(String type) {
@@ -92,16 +43,36 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
   Color _getTaskColor(String type) {
     switch (type.toUpperCase()) {
       case 'SHIFT':
-        return AppColors.primary;
+        return const Color(0xFF2196F3); // Blue
       case 'MAINTENANCE':
-        return AppColors.warning;
+        return const Color(0xFFFF9800); // Orange
       case 'CLEANING':
-        return AppColors.info;
+        return const Color(0xFF00BCD4); // Cyan
       case 'INSPECTION':
-        return const Color(0xFF9C27B0);
+        return const Color(0xFF9C27B0); // Purple
       default:
         return AppColors.primary;
     }
+  }
+
+  Color _getStatusColor(String status) {
+    switch (status) {
+      case 'pending':
+        return const Color(0xFFFFA726); // Orange
+      case 'in_progress':
+        return const Color(0xFF42A5F5); // Blue
+      case 'completed':
+        return const Color(0xFF66BB6A); // Green
+      default:
+        return AppColors.textSecondary;
+    }
+  }
+
+  void _updateTaskStatus(String newStatus) {
+    setState(() {
+      task['status'] = newStatus;
+    });
+    widget.onTaskUpdated(task);
   }
 
   @override
@@ -110,11 +81,14 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
     final Color mainColor = _getTaskColor(taskType);
     final bool isHighPriority = task['priority'] == 'high';
     final String status = task['status'] ?? 'pending';
+    final Color statusColor = _getStatusColor(status);
 
     return Scaffold(
       backgroundColor: AppColors.softBackground,
       appBar: AppBar(
         title: Text(task['title'] ?? 'Task Details'),
+        backgroundColor: AppColors.cardWhite,
+        elevation: 0,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
@@ -122,7 +96,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Status Card
-            _buildStatusCard(mainColor, taskType, isHighPriority, status),
+            _buildStatusCard(mainColor, taskType, isHighPriority, status, statusColor),
             const SizedBox(height: 20),
 
             // Task Details
@@ -146,7 +120,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
             ],
 
             // Action Button
-            _buildActionButton(mainColor, status),
+            _buildActionButton(mainColor, status, statusColor),
             const SizedBox(height: 20),
           ],
         ),
@@ -154,13 +128,13 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
     );
   }
 
-  Widget _buildStatusCard(Color mainColor, String taskType, bool isHighPriority, String status) {
+  Widget _buildStatusCard(Color mainColor, String taskType, bool isHighPriority, String status, Color statusColor) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [mainColor, mainColor.withOpacity(0.8)],
+          colors: [mainColor, mainColor.withOpacity(0.7)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -210,7 +184,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(
-                    color: AppColors.warning,
+                    color: const Color(0xFFEF5350),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: const Row(
@@ -269,21 +243,35 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.2),
+              color: statusColor,
               borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: Colors.white, width: 1.5),
             ),
-            child: Text(
-              status == 'pending'
-                  ? 'Pending'
-                  : status == 'in_progress'
-                      ? 'In Progress'
-                      : 'Completed',
-              style: const TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w600,
-                color: Colors.white,
-              ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  status == 'pending'
+                      ? Icons.pending_actions
+                      : status == 'in_progress'
+                          ? Icons.autorenew
+                          : Icons.check_circle,
+                  size: 16,
+                  color: Colors.white,
+                ),
+                const SizedBox(width: 6),
+                Text(
+                  status == 'pending'
+                      ? 'Pending'
+                      : status == 'in_progress'
+                          ? 'In Progress'
+                          : 'Completed',
+                  style: const TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
             ),
           ),
         ],
@@ -422,16 +410,16 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.warning.withOpacity(0.1),
+        color: const Color(0xFFFFF3E0),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.warning, width: 1),
+        border: Border.all(color: const Color(0xFFFFB74D), width: 1),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Icon(
             Icons.info_outline,
-            color: AppColors.warning,
+            color: Color(0xFFFF9800),
             size: 24,
           ),
           const SizedBox(width: 12),
@@ -449,54 +437,52 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
     );
   }
 
-  Widget _buildActionButton(Color mainColor, String status) {
+  Widget _buildActionButton(Color mainColor, String status, Color statusColor) {
     String buttonText;
     IconData buttonIcon;
-    VoidCallback onPressed;
+    VoidCallback? onPressed;
 
     if (status == 'pending') {
       buttonText = 'Start Task';
       buttonIcon = Icons.play_arrow;
       onPressed = () {
-        setState(() {
-          task['status'] = 'in_progress';
-        });
-        _showSnackBar('Task started');
+        _updateTaskStatus('in_progress');
+        _showSnackBar('Task started', const Color(0xFF42A5F5));
       };
     } else if (status == 'in_progress') {
       buttonText = 'Complete Task';
       buttonIcon = Icons.check;
       onPressed = () {
-        setState(() {
-          task['status'] = 'completed';
-        });
-        _showSnackBar('Task completed');
-        Future.delayed(const Duration(seconds: 1), () {
+        _updateTaskStatus('completed');
+        _showSnackBar('Task completed successfully!', const Color(0xFF66BB6A));
+        Future.delayed(const Duration(milliseconds: 1500), () {
           if (mounted) Navigator.pop(context);
         });
       };
     } else {
       buttonText = 'Task Completed';
       buttonIcon = Icons.check_circle;
-      onPressed = () {};
+      onPressed = null;
     }
 
     return SizedBox(
       width: double.infinity,
       height: 56,
       child: ElevatedButton.icon(
-        onPressed: status == 'completed' ? null : onPressed,
+        onPressed: onPressed,
         icon: Icon(buttonIcon, size: 24),
         label: Text(
           buttonText,
           style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
         style: ElevatedButton.styleFrom(
-          backgroundColor: status == 'completed' ? AppColors.success : mainColor,
-          disabledBackgroundColor: AppColors.success.withOpacity(0.6),
+          backgroundColor: status == 'completed' ? const Color(0xFF66BB6A) : mainColor,
+          disabledBackgroundColor: const Color(0xFF66BB6A).withOpacity(0.7),
+          foregroundColor: Colors.white,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
+          elevation: status == 'completed' ? 0 : 4,
         ),
       ),
     );
@@ -509,15 +495,22 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
     );
   }
 
-  void _showSnackBar(String message) {
+  void _showSnackBar(String message, Color color) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(message),
+        content: Row(
+          children: [
+            Icon(Icons.check_circle, color: Colors.white, size: 20),
+            const SizedBox(width: 12),
+            Expanded(child: Text(message)),
+          ],
+        ),
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         ),
-        backgroundColor: AppColors.success,
+        backgroundColor: color,
+        duration: const Duration(milliseconds: 1500),
       ),
     );
   }

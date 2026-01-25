@@ -17,6 +17,107 @@ class _TasksListScreenState extends State<TasksListScreen> {
   final TextEditingController _searchController = TextEditingController();
   String _searchQuery = '';
 
+  // Mutable task data
+  late List<Map<String, dynamic>> _allTasks;
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeTasks();
+  }
+
+  void _initializeTasks() {
+    _allTasks = [
+      {
+        'id': 1,
+        'type': 'SHIFT',
+        'title': 'Morning Shift',
+        'time': '08:00 AM',
+        'endTime': '04:00 PM',
+        'date': 'Today',
+        'timeRemaining': 'Started',
+        'description': 'Front desk duty at main branch. Handle customer inquiries and process bookings.',
+        'location': 'Main Branch - Ramallah',
+        'priority': 'normal',
+        'status': 'in_progress',
+        'notes': 'Remember to check pending reservations for tomorrow.',
+      },
+      {
+        'id': 2,
+        'type': 'MAINTENANCE',
+        'title': 'Oil Change - Toyota Camry',
+        'time': '10:00 AM',
+        'date': 'Today',
+        'timeRemaining': 'In 2 hours',
+        'description': 'Regular oil change and filter replacement. Check tire pressure and fluid levels.',
+        'location': 'Workshop',
+        'vehiclePlate': 'ABC-123',
+        'priority': 'high',
+        'status': 'pending',
+        'notes': 'Customer reported slight engine noise. Please inspect.',
+      },
+      {
+        'id': 3,
+        'type': 'CLEANING',
+        'title': 'Deep Clean - Honda CR-V',
+        'time': '02:00 PM',
+        'date': 'Today',
+        'timeRemaining': 'In 6 hours',
+        'description': 'Full interior and exterior cleaning. Vacuum, wash, and wax.',
+        'location': 'Cleaning Bay',
+        'vehiclePlate': 'XYZ-789',
+        'priority': 'normal',
+        'status': 'pending',
+      },
+      {
+        'id': 4,
+        'type': 'INSPECTION',
+        'title': 'Vehicle Inspection - BMW X5',
+        'time': '09:00 AM',
+        'date': 'Tomorrow',
+        'timeRemaining': 'Tomorrow',
+        'description': 'Pre-rental inspection. Check all systems, document condition with photos.',
+        'location': 'Main Branch',
+        'vehiclePlate': 'BMW-555',
+        'priority': 'normal',
+        'status': 'pending',
+      },
+      {
+        'id': 5,
+        'type': 'MAINTENANCE',
+        'title': 'Tire Rotation - Nissan Altima',
+        'time': '11:00 AM',
+        'date': 'Tomorrow',
+        'timeRemaining': 'Tomorrow',
+        'description': 'Rotate tires and check pressure',
+        'location': 'Workshop',
+        'priority': 'high',
+        'status': 'pending',
+      },
+      {
+        'id': 6,
+        'type': 'SHIFT',
+        'title': 'Evening Shift',
+        'time': '04:00 PM',
+        'date': 'Tomorrow',
+        'timeRemaining': 'Tomorrow',
+        'description': 'Customer service and closing duties',
+        'location': 'Main Branch - Ramallah',
+        'priority': 'normal',
+        'status': 'pending',
+      },
+    ];
+  }
+
+  void _updateTask(Map<String, dynamic> updatedTask) {
+    setState(() {
+      final index = _allTasks.indexWhere((t) => t['id'] == updatedTask['id']);
+      if (index != -1) {
+        _allTasks[index] = updatedTask;
+      }
+    });
+  }
+
   @override
   void dispose() {
     _searchController.dispose();
@@ -145,11 +246,15 @@ class _TasksListScreenState extends State<TasksListScreen> {
 
   // ==================== FILTER CHIPS ====================
   Widget _buildFilterChips() {
+    final pendingCount = _allTasks.where((t) => t['status'] == 'pending').length;
+    final inProgressCount = _allTasks.where((t) => t['status'] == 'in_progress').length;
+    final completedCount = _allTasks.where((t) => t['status'] == 'completed').length;
+
     final filters = [
-      {'label': 'All', 'icon': Icons.list_alt, 'count': 8},
-      {'label': 'Pending', 'icon': Icons.pending_actions, 'count': 2},
-      {'label': 'In Progress', 'icon': Icons.autorenew, 'count': 3},
-      {'label': 'Completed', 'icon': Icons.check_circle, 'count': 3},
+      {'label': 'All', 'icon': Icons.list_alt, 'count': _allTasks.length},
+      {'label': 'Pending', 'icon': Icons.pending_actions, 'count': pendingCount},
+      {'label': 'In Progress', 'icon': Icons.autorenew, 'count': inProgressCount},
+      {'label': 'Completed', 'icon': Icons.check_circle, 'count': completedCount},
     ];
 
     return SingleChildScrollView(
@@ -219,79 +324,15 @@ class _TasksListScreenState extends State<TasksListScreen> {
 
   // ==================== TASKS LIST ====================
   Widget _buildTasksList() {
-    // Task data with proper types (SHIFT, MAINTENANCE, CLEANING, etc.)
-    final tasksByDate = {
-      'Today': [
-        {
-          'id': 1,
-          'type': 'SHIFT',
-          'title': 'Morning Shift',
-          'time': '08:00 AM',
-          'timeRemaining': 'Started',
-          'description': 'Front desk duty at main branch',
-          'location': 'Main Branch - Ramallah',
-          'priority': 'normal',
-          'status': 'in_progress',
-        },
-        {
-          'id': 2,
-          'type': 'MAINTENANCE',
-          'title': 'Oil Change - Toyota Camry',
-          'time': '10:00 AM',
-          'timeRemaining': 'In 2 hours',
-          'description': 'Regular oil change and filter replacement',
-          'location': 'Workshop',
-          'priority': 'high',
-          'status': 'pending',
-        },
-        {
-          'id': 3,
-          'type': 'CLEANING',
-          'title': 'Deep Clean - Honda CR-V',
-          'time': '02:00 PM',
-          'timeRemaining': 'In 6 hours',
-          'description': 'Interior and exterior cleaning before rental',
-          'location': 'Cleaning Bay',
-          'priority': 'normal',
-          'status': 'pending',
-        },
-      ],
-      'Tomorrow': [
-        {
-          'id': 4,
-          'type': 'INSPECTION',
-          'title': 'Vehicle Inspection - BMW X5',
-          'time': '09:00 AM',
-          'timeRemaining': 'Tomorrow',
-          'description': 'Pre-rental inspection checklist',
-          'location': 'Main Branch',
-          'priority': 'normal',
-          'status': 'pending',
-        },
-        {
-          'id': 5,
-          'type': 'MAINTENANCE',
-          'title': 'Tire Rotation - Nissan Altima',
-          'time': '11:00 AM',
-          'timeRemaining': 'Tomorrow',
-          'description': 'Rotate tires and check pressure',
-          'location': 'Workshop',
-          'priority': 'high',
-          'status': 'pending',
-        },
-        {
-          'id': 6,
-          'type': 'SHIFT',
-          'title': 'Evening Shift',
-          'time': '04:00 PM',
-          'timeRemaining': 'Tomorrow',
-          'description': 'Customer service and closing duties',
-          'location': 'Main Branch - Ramallah',
-          'priority': 'normal',
-          'status': 'pending',
-        },
-      ],
-    };
+    final tasksByDate = <String, List<Map<String, dynamic>>>{};
+    
+    for (var task in _allTasks) {
+      final date = task['date'] as String;
+      if (!tasksByDate.containsKey(date)) {
+        tasksByDate[date] = [];
+      }
+      tasksByDate[date]!.add(task);
+    }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -381,17 +422,30 @@ class _TasksListScreenState extends State<TasksListScreen> {
   Color _getTaskColor(String type) {
     switch (type.toUpperCase()) {
       case 'SHIFT':
-        return AppColors.primary;
+        return const Color(0xFF2196F3); // Blue
       case 'MAINTENANCE':
-        return AppColors.warning;
+        return const Color(0xFFFF9800); // Orange
       case 'CLEANING':
-        return AppColors.info;
+        return const Color(0xFF00BCD4); // Cyan
       case 'INSPECTION':
-        return const Color(0xFF9C27B0);
+        return const Color(0xFF9C27B0); // Purple
       case 'DELIVERY':
-        return AppColors.success;
+        return const Color(0xFF4CAF50); // Green
       default:
         return AppColors.primary;
+    }
+  }
+
+  Color _getStatusColor(String status) {
+    switch (status) {
+      case 'pending':
+        return const Color(0xFFFFA726); // Orange
+      case 'in_progress':
+        return const Color(0xFF42A5F5); // Blue
+      case 'completed':
+        return const Color(0xFF66BB6A); // Green
+      default:
+        return AppColors.textSecondary;
     }
   }
 
@@ -401,27 +455,7 @@ class _TasksListScreenState extends State<TasksListScreen> {
     final Color mainColor = _getTaskColor(taskType);
     final bool isHighPriority = task['priority'] == 'high';
     final String status = task['status'] as String;
-
-    // Status badge
-    Color statusColor;
-    String statusText;
-    switch (status) {
-      case 'pending':
-        statusColor = AppColors.warning;
-        statusText = 'Pending';
-        break;
-      case 'in_progress':
-        statusColor = AppColors.info;
-        statusText = 'In Progress';
-        break;
-      case 'completed':
-        statusColor = AppColors.success;
-        statusText = 'Completed';
-        break;
-      default:
-        statusColor = AppColors.textSecondary;
-        statusText = 'Unknown';
-    }
+    final Color statusColor = _getStatusColor(status);
 
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
@@ -429,7 +463,7 @@ class _TasksListScreenState extends State<TasksListScreen> {
         color: AppColors.cardWhite,
         borderRadius: BorderRadius.circular(16),
         border: isHighPriority
-            ? Border.all(color: AppColors.warning, width: 2)
+            ? Border.all(color: const Color(0xFFEF5350), width: 2)
             : null,
         boxShadow: [
           BoxShadow(
@@ -442,11 +476,14 @@ class _TasksListScreenState extends State<TasksListScreen> {
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          onTap: () {
-            Navigator.push(
+          onTap: () async {
+            await Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => TaskDetailsScreen(taskId: task['id']),
+                builder: (context) => TaskDetailsScreen(
+                  task: task,
+                  onTaskUpdated: _updateTask,
+                ),
               ),
             );
           },
@@ -506,10 +543,10 @@ class _TasksListScreenState extends State<TasksListScreen> {
                                 vertical: 2,
                               ),
                               decoration: BoxDecoration(
-                                color: AppColors.warning.withOpacity(0.1),
+                                color: const Color(0xFFFFEBEE),
                                 borderRadius: BorderRadius.circular(4),
                                 border: Border.all(
-                                  color: AppColors.warning,
+                                  color: const Color(0xFFEF5350),
                                   width: 1,
                                 ),
                               ),
@@ -518,7 +555,7 @@ class _TasksListScreenState extends State<TasksListScreen> {
                                 style: TextStyle(
                                   fontSize: 9,
                                   fontWeight: FontWeight.bold,
-                                  color: AppColors.warning,
+                                  color: Color(0xFFEF5350),
                                 ),
                               ),
                             ),
@@ -533,7 +570,11 @@ class _TasksListScreenState extends State<TasksListScreen> {
                               borderRadius: BorderRadius.circular(4),
                             ),
                             child: Text(
-                              statusText,
+                              status == 'pending'
+                                  ? 'Pending'
+                                  : status == 'in_progress'
+                                      ? 'Active'
+                                      : 'Done',
                               style: TextStyle(
                                 fontSize: 9,
                                 fontWeight: FontWeight.w600,
@@ -618,7 +659,7 @@ class _TasksListScreenState extends State<TasksListScreen> {
   Future<void> _refreshTasks() async {
     await Future.delayed(const Duration(seconds: 1));
     setState(() {
-      // TODO: Refresh data from API
+      // Refresh UI
     });
     _showSnackBar('Tasks refreshed');
   }
