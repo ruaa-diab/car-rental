@@ -4,7 +4,7 @@ import '../../../core/theme/app_text_styles.dart';
 import 'booking_details_screen.dart';
 
 class BookingsListScreen extends StatefulWidget {
-  const BookingsListScreen({Key? key}) : super(key: key);
+  const BookingsListScreen({super.key});
 
   @override
   State<BookingsListScreen> createState() => _BookingsListScreenState();
@@ -307,7 +307,7 @@ class _BookingsListScreenState extends State<BookingsListScreen> {
             // Customer & Car
             Row(
               children: [
-                Icon(Icons.person, size: 16, color: AppColors.textSecondary),
+                const Icon(Icons.person, size: 16, color: AppColors.textSecondary),
                 const SizedBox(width: 6),
                 Text(
                   booking['customer'],
@@ -318,7 +318,7 @@ class _BookingsListScreenState extends State<BookingsListScreen> {
             const SizedBox(height: 6),
             Row(
               children: [
-                Icon(Icons.directions_car, size: 16, color: AppColors.textSecondary),
+                const Icon(Icons.directions_car, size: 16, color: AppColors.textSecondary),
                 const SizedBox(width: 6),
                 Text(
                   booking['car'],
@@ -331,7 +331,7 @@ class _BookingsListScreenState extends State<BookingsListScreen> {
             // Dates
             Row(
               children: [
-                Icon(Icons.calendar_today, size: 14, color: AppColors.textSecondary),
+                const Icon(Icons.calendar_today, size: 14, color: AppColors.textSecondary),
                 const SizedBox(width: 6),
                 Text(
                   '${booking['startDate']} - ${booking['endDate']}',
@@ -340,7 +340,7 @@ class _BookingsListScreenState extends State<BookingsListScreen> {
                 const Spacer(),
                 Text(
                   '\$${booking['amount']}',
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                     color: AppColors.warning,
@@ -372,7 +372,7 @@ class _BookingsListScreenState extends State<BookingsListScreen> {
             ),
           ),
           const SizedBox(height: 8),
-          Text(
+          const Text(
             'Try adjusting your search or filters',
             style: AppTextStyles.caption,
           ),

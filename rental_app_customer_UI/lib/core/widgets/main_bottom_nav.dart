@@ -41,8 +41,6 @@ class MainBottomNav extends StatelessWidget {
         return;
     }
 
-    if (destination == null) return;
-
     Navigator.pushReplacement(
       context,
       PageRouteBuilder(

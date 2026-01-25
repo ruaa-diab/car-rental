@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../core/theme/app_colors.dart';
-import '../../core/widgets/app_search_bar.dart';
 import '../../core/widgets/app_header.dart';
 import '../../core/widgets/main_bottom_nav.dart';
 import '../../core/providers/providers.dart';
@@ -196,8 +195,8 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
               children: [
                 Container(
                   height: 120,
-                  decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+                  decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
                     color: AppColors.softBackground,
                   ),
                   child: ClipRRect(
@@ -352,7 +351,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
             ),
           ),
           const SizedBox(height: 8),
-          Text(
+          const Text(
             'Add cars to your favorites to see them here',
             style: TextStyle(fontSize: 14, color: AppColors.textSecondary),
             textAlign: TextAlign.center,

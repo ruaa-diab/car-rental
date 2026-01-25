@@ -345,13 +345,13 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       child: Stack(
         children: [
-          Positioned(
+          const Positioned(
             left: 20,
             top: 20,
             right: 180,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
+              children: [
                 Text(
                   'Book Your Perfect Ride',
                   style: TextStyle(
@@ -455,13 +455,13 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       child: Stack(
         children: [
-          Positioned(
+          const Positioned(
             left: 24,
             top: 24,
             right: 140,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
+              children: [
                 Text(
                   'Drive Your Dreams',
                   style: TextStyle(
@@ -578,13 +578,13 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       child: Stack(
         children: [
-          Positioned(
+          const Positioned(
             left: 20,
             top: 20,
             right: 180,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
+              children: [
                 Text(
                   'Find Nearest Branch',
                   style: TextStyle(

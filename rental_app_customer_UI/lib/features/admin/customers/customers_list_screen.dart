@@ -4,7 +4,7 @@ import '../../../core/theme/app_text_styles.dart';
 import 'customer_details_screen.dart';
 
 class CustomersListScreen extends StatefulWidget {
-  const CustomersListScreen({Key? key}) : super(key: key);
+  const CustomersListScreen({super.key});
 
   @override
   State<CustomersListScreen> createState() => _CustomersListScreenState();
@@ -223,7 +223,7 @@ class _CustomersListScreenState extends State<CustomersListScreen> {
               child: Center(
                 child: Text(
                   customer['avatar'],
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
                     color: AppColors.success,
@@ -259,7 +259,7 @@ class _CustomersListScreenState extends State<CustomersListScreen> {
                             color: AppColors.success.withOpacity(0.1),
                             borderRadius: BorderRadius.circular(6),
                           ),
-                          child: Text(
+                          child: const Text(
                             'Active',
                             style: TextStyle(
                               fontSize: 11,
@@ -273,7 +273,7 @@ class _CustomersListScreenState extends State<CustomersListScreen> {
                   const SizedBox(height: 4),
                   Row(
                     children: [
-                      Icon(
+                      const Icon(
                         Icons.email_outlined,
                         size: 14,
                         color: AppColors.textSecondary,
@@ -291,7 +291,7 @@ class _CustomersListScreenState extends State<CustomersListScreen> {
                   const SizedBox(height: 8),
                   Row(
                     children: [
-                      Icon(
+                      const Icon(
                         Icons.event,
                         size: 14,
                         color: AppColors.primary,
@@ -302,7 +302,7 @@ class _CustomersListScreenState extends State<CustomersListScreen> {
                         style: AppTextStyles.caption.copyWith(fontSize: 11),
                       ),
                       const SizedBox(width: 12),
-                      Icon(
+                      const Icon(
                         Icons.attach_money,
                         size: 14,
                         color: AppColors.warning,
@@ -313,7 +313,7 @@ class _CustomersListScreenState extends State<CustomersListScreen> {
                         style: AppTextStyles.caption.copyWith(fontSize: 11),
                       ),
                       const SizedBox(width: 12),
-                      Icon(
+                      const Icon(
                         Icons.star,
                         size: 14,
                         color: AppColors.warning,
@@ -352,7 +352,7 @@ class _CustomersListScreenState extends State<CustomersListScreen> {
             ),
           ),
           const SizedBox(height: 8),
-          Text(
+          const Text(
             'Try adjusting your search',
             style: AppTextStyles.caption,
           ),

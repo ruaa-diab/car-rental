@@ -49,11 +49,11 @@ class EmployeeHeader extends StatelessWidget {
           ),
           const SizedBox(width: 10),
           // Title - Expanded to take remaining space
-          Expanded(
+          const Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
-              children: const [
+              children: [
                 Text(
                   'Employee Portal',
                   style: TextStyle(

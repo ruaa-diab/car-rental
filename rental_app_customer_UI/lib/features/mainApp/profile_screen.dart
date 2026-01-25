@@ -61,7 +61,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               Container(
                                 width: 100,
                                 height: 100,
-                                decoration: BoxDecoration(
+                                decoration: const BoxDecoration(
                                   shape: BoxShape.circle,
                                   color: AppColors.softBackground,
                                 ),
@@ -468,7 +468,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 title: Text(key),
                 value: notificationStatus[key]!,
                 onChanged: (value) => setState(() => notificationStatus[key] = value),
-                activeColor: AppColors.primary,
+                activeThumbColor: AppColors.primary,
               );
             }).toList(),
           ),

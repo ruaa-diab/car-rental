@@ -4,7 +4,6 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/widgets/main_bottom_nav.dart';
 import '../../core/providers/branch_provider.dart';
 import '../../core/models/branch_model.dart';
-import 'home.dart';
 
 class MapScreen extends StatefulWidget {
   const MapScreen({super.key});
@@ -73,7 +72,7 @@ class _MapScreenState extends State<MapScreen> {
                       // Show sample markers for visual representation
                       return Stack(
                         children: [
-                          if (branchProvider.branches.length > 0)
+                          if (branchProvider.branches.isNotEmpty)
                             Positioned(
                               top: 120,
                               left: 60,
@@ -156,7 +155,7 @@ class _MapScreenState extends State<MapScreen> {
           ),
         ],
       ),
-      bottomNavigationBar: MainBottomNav(currentIndex: 3),
+      bottomNavigationBar: const MainBottomNav(currentIndex: 3),
     );
   }
 

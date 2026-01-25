@@ -7,7 +7,7 @@ import 'pickup_camera_screen.dart';
 class PickupInspectionScreen extends StatefulWidget {
   final int taskId;
 
-  const PickupInspectionScreen({Key? key, required this.taskId}) : super(key: key);
+  const PickupInspectionScreen({super.key, required this.taskId});
 
   @override
   State<PickupInspectionScreen> createState() => _PickupInspectionScreenState();
@@ -219,14 +219,14 @@ class _PickupInspectionScreenState extends State<PickupInspectionScreen> {
         ),
         borderRadius: BorderRadius.circular(16),
       ),
-      child: Row(
+      child: const Row(
         children: [
           Icon(
             Icons.directions_car,
             size: 40,
             color: Colors.white,
           ),
-          const SizedBox(width: 16),
+          SizedBox(width: 16),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -239,7 +239,7 @@ class _PickupInspectionScreenState extends State<PickupInspectionScreen> {
                     color: Colors.white,
                   ),
                 ),
-                const SizedBox(height: 4),
+                SizedBox(height: 4),
                 Text(
                   'ABC-123 • White • SUV',
                   style: TextStyle(
@@ -278,7 +278,7 @@ class _PickupInspectionScreenState extends State<PickupInspectionScreen> {
             keyboardType: TextInputType.number,
             decoration: InputDecoration(
               labelText: 'Odometer Reading (km)',
-              prefixIcon: Icon(Icons.speed, color: AppColors.primary),
+              prefixIcon: const Icon(Icons.speed, color: AppColors.primary),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
@@ -296,10 +296,10 @@ class _PickupInspectionScreenState extends State<PickupInspectionScreen> {
           
           // Fuel Level
           DropdownButtonFormField<String>(
-            value: _fuelLevel,
+            initialValue: _fuelLevel,
             decoration: InputDecoration(
               labelText: 'Fuel Level',
-              prefixIcon: Icon(Icons.local_gas_station, color: AppColors.warning),
+              prefixIcon: const Icon(Icons.local_gas_station, color: AppColors.warning),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
               ),

@@ -9,11 +9,11 @@ class PickupSignatureScreen extends StatefulWidget {
   final Map<String, String?> photos;
 
   const PickupSignatureScreen({
-    Key? key,
+    super.key,
     required this.taskId,
     required this.inspectionData,
     required this.photos,
-  }) : super(key: key);
+  });
 
   @override
   State<PickupSignatureScreen> createState() => _PickupSignatureScreenState();
@@ -188,14 +188,14 @@ class _PickupSignatureScreenState extends State<PickupSignatureScreen> {
         ),
         borderRadius: BorderRadius.circular(16),
       ),
-      child: Row(
+      child: const Row(
         children: [
           Icon(
             Icons.draw,
             size: 40,
             color: Colors.white,
           ),
-          const SizedBox(width: 16),
+          SizedBox(width: 16),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -208,7 +208,7 @@ class _PickupSignatureScreenState extends State<PickupSignatureScreen> {
                     color: Colors.white,
                   ),
                 ),
-                const SizedBox(height: 4),
+                SizedBox(height: 4),
                 Text(
                   'Both signatures required to complete',
                   style: TextStyle(
@@ -404,7 +404,7 @@ class _PickupSignatureScreenState extends State<PickupSignatureScreen> {
                     label: const Text('Clear'),
                     style: OutlinedButton.styleFrom(
                       foregroundColor: AppColors.error,
-                      side: BorderSide(color: AppColors.error),
+                      side: const BorderSide(color: AppColors.error),
                       padding: const EdgeInsets.symmetric(vertical: 12),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
@@ -454,7 +454,7 @@ class _PickupSignatureScreenState extends State<PickupSignatureScreen> {
         children: [
           Row(
             children: [
-              Icon(Icons.info_outline, color: AppColors.info, size: 20),
+              const Icon(Icons.info_outline, color: AppColors.info, size: 20),
               const SizedBox(width: 8),
               Text(
                 'Agreement',
@@ -466,7 +466,7 @@ class _PickupSignatureScreenState extends State<PickupSignatureScreen> {
             ],
           ),
           const SizedBox(height: 12),
-          Text(
+          const Text(
             'By signing above, both parties confirm that:',
             style: AppTextStyles.bodySmall,
           ),

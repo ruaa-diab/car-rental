@@ -14,7 +14,7 @@ class BookingDetailsScreen extends StatelessWidget {
     final pricePerDay = (booking['pricePerDay'] ?? booking['totalPrice'] ?? 0).toDouble();
     final totalDays = booking['totalDays'] ?? 1;
     final totalPrice = booking['totalPrice'] ?? (pricePerDay * totalDays);
-    final insurance = 25.0;
+    const insurance = 25.0;
     final grandTotal = totalPrice + insurance;
     
     final carImage = booking['carImageUrl'] ?? booking['carImage'] ?? '';
@@ -246,7 +246,7 @@ class BookingDetailsScreen extends StatelessWidget {
                 ),
               ],
             ),
-          )).toList(),
+          )),
         ],
       ),
     );

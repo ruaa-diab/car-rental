@@ -8,7 +8,7 @@ import 'pickup_inspection_screen.dart';
 class PickupNavigationScreen extends StatefulWidget {
   final int taskId;
 
-  const PickupNavigationScreen({Key? key, required this.taskId}) : super(key: key);
+  const PickupNavigationScreen({super.key, required this.taskId});
 
   @override
   State<PickupNavigationScreen> createState() => _PickupNavigationScreenState();
@@ -113,7 +113,7 @@ class _PickupNavigationScreenState extends State<PickupNavigationScreen> {
                 _showSnackBar('Centering to current location');
               },
               backgroundColor: Colors.white,
-              child: Icon(
+              child: const Icon(
                 Icons.my_location,
                 color: AppColors.primary,
               ),
@@ -124,7 +124,7 @@ class _PickupNavigationScreenState extends State<PickupNavigationScreen> {
           Positioned(
             bottom: 100,
             left: MediaQuery.of(context).size.width / 2 - 20,
-            child: Icon(
+            child: const Icon(
               Icons.location_on,
               size: 40,
               color: AppColors.error,
@@ -160,7 +160,7 @@ class _PickupNavigationScreenState extends State<PickupNavigationScreen> {
               CircleAvatar(
                 radius: 30,
                 backgroundColor: AppColors.primary.withOpacity(0.1),
-                child: Icon(
+                child: const Icon(
                   Icons.person,
                   size: 30,
                   color: AppColors.primary,
@@ -179,7 +179,7 @@ class _PickupNavigationScreenState extends State<PickupNavigationScreen> {
                     const SizedBox(height: 4),
                     Row(
                       children: [
-                        Icon(
+                        const Icon(
                           Icons.directions_car,
                           size: 14,
                           color: AppColors.textSecondary,
@@ -197,7 +197,7 @@ class _PickupNavigationScreenState extends State<PickupNavigationScreen> {
               // Call Button
               IconButton(
                 onPressed: () => _makePhoneCall(task['customer']['phone']),
-                icon: Icon(
+                icon: const Icon(
                   Icons.phone,
                   color: AppColors.success,
                   size: 28,
@@ -207,7 +207,7 @@ class _PickupNavigationScreenState extends State<PickupNavigationScreen> {
           ),
 
           const SizedBox(height: 16),
-          Divider(color: AppColors.divider),
+          const Divider(color: AppColors.divider),
           const SizedBox(height: 16),
 
           // Address
@@ -219,7 +219,7 @@ class _PickupNavigationScreenState extends State<PickupNavigationScreen> {
                   color: AppColors.error.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: Icon(
+                child: const Icon(
                   Icons.location_on,
                   color: AppColors.error,
                   size: 24,
@@ -230,7 +230,7 @@ class _PickupNavigationScreenState extends State<PickupNavigationScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
+                    const Text(
                       'Delivery Address',
                       style: AppTextStyles.caption,
                     ),

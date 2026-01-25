@@ -8,10 +8,10 @@ class PickupCameraScreen extends StatefulWidget {
   final Map<String, dynamic> inspectionData;
 
   const PickupCameraScreen({
-    Key? key,
+    super.key,
     required this.taskId,
     required this.inspectionData,
-  }) : super(key: key);
+  });
 
   @override
   State<PickupCameraScreen> createState() => _PickupCameraScreenState();
@@ -184,14 +184,14 @@ class _PickupCameraScreenState extends State<PickupCameraScreen> {
         ),
         borderRadius: BorderRadius.circular(16),
       ),
-      child: Row(
+      child: const Row(
         children: [
           Icon(
             Icons.camera_alt,
             size: 40,
             color: Colors.white,
           ),
-          const SizedBox(width: 16),
+          SizedBox(width: 16),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -204,7 +204,7 @@ class _PickupCameraScreenState extends State<PickupCameraScreen> {
                     color: Colors.white,
                   ),
                 ),
-                const SizedBox(height: 4),
+                SizedBox(height: 4),
                 Text(
                   'Take clear photos of all required angles',
                   style: TextStyle(
@@ -234,7 +234,7 @@ class _PickupCameraScreenState extends State<PickupCameraScreen> {
         children: [
           Row(
             children: [
-              Icon(Icons.lightbulb_outline, color: AppColors.warning, size: 20),
+              const Icon(Icons.lightbulb_outline, color: AppColors.warning, size: 20),
               const SizedBox(width: 8),
               Text(
                 'Tips for Better Photos:',
@@ -323,7 +323,7 @@ class _PickupCameraScreenState extends State<PickupCameraScreen> {
                   child: Stack(
                     children: [
                       // Placeholder for actual photo
-                      Center(
+                      const Center(
                         child: Icon(
                           Icons.check_circle,
                           size: 48,
@@ -346,7 +346,7 @@ class _PickupCameraScreenState extends State<PickupCameraScreen> {
                               ),
                             ],
                           ),
-                          child: Icon(
+                          child: const Icon(
                             Icons.refresh,
                             size: 16,
                             color: AppColors.primary,
@@ -376,7 +376,7 @@ class _PickupCameraScreenState extends State<PickupCameraScreen> {
                   color: AppColors.primary.withOpacity(0.1),
                   shape: BoxShape.circle,
                 ),
-                child: Icon(
+                child: const Icon(
                   Icons.add_a_photo,
                   size: 32,
                   color: AppColors.primary,
@@ -433,7 +433,7 @@ class _PickupCameraScreenState extends State<PickupCameraScreen> {
       context: context,
       builder: (context) => AlertDialog(
         title: Text('Take ${_photoLabels[photoKey]}'),
-        content: Column(
+        content: const Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(
@@ -441,13 +441,13 @@ class _PickupCameraScreenState extends State<PickupCameraScreen> {
               size: 64,
               color: AppColors.primary,
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
             Text(
               'Camera functionality requires image_picker package',
               textAlign: TextAlign.center,
               style: AppTextStyles.body,
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
             Text(
               'For demo purposes, we\'ll mark this photo as taken',
               textAlign: TextAlign.center,

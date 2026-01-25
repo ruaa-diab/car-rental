@@ -13,13 +13,13 @@ class PickupConfirmationScreen extends StatefulWidget {
   final List<Offset?> customerSignature;
 
   const PickupConfirmationScreen({
-    Key? key,
+    super.key,
     required this.taskId,
     required this.inspectionData,
     required this.photos,
     required this.employeeSignature,
     required this.customerSignature,
-  }) : super(key: key);
+  });
 
   @override
   State<PickupConfirmationScreen> createState() => _PickupConfirmationScreenState();
@@ -256,11 +256,11 @@ class _PickupConfirmationScreenState extends State<PickupConfirmationScreen>
         children: [
           Row(
             children: [
-              Icon(Icons.assignment, color: Colors.white, size: 28),
+              const Icon(Icons.assignment, color: Colors.white, size: 28),
               const SizedBox(width: 12),
               Text(
                 'Task #${widget.taskId}',
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
@@ -284,7 +284,7 @@ class _PickupConfirmationScreenState extends State<PickupConfirmationScreen>
       children: [
         Text(
           '$label: ',
-          style: TextStyle(
+          style: const TextStyle(
             color: Colors.white70,
             fontSize: 14,
           ),
@@ -292,7 +292,7 @@ class _PickupConfirmationScreenState extends State<PickupConfirmationScreen>
         Expanded(
           child: Text(
             value,
-            style: TextStyle(
+            style: const TextStyle(
               color: Colors.white,
               fontSize: 14,
               fontWeight: FontWeight.w600,
@@ -318,7 +318,7 @@ class _PickupConfirmationScreenState extends State<PickupConfirmationScreen>
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.access_time, color: AppColors.info, size: 20),
+          const Icon(Icons.access_time, color: AppColors.info, size: 20),
           const SizedBox(width: 8),
           Text(
             'Completed at $timeString',
@@ -369,7 +369,7 @@ class _PickupConfirmationScreenState extends State<PickupConfirmationScreen>
             ),
             style: OutlinedButton.styleFrom(
               foregroundColor: AppColors.primary,
-              side: BorderSide(color: AppColors.primary, width: 2),
+              side: const BorderSide(color: AppColors.primary, width: 2),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16),
               ),
@@ -407,9 +407,9 @@ class _PickupConfirmationScreenState extends State<PickupConfirmationScreen>
               Text('Fuel Level: ${widget.inspectionData['fuelLevel']}'),
               const SizedBox(height: 8),
               Text('Photos: ${widget.photos.length} images'),
-              Text('Signatures: 2 (Employee & Customer)'),
+              const Text('Signatures: 2 (Employee & Customer)'),
               const SizedBox(height: 16),
-              Text(
+              const Text(
                 'All data has been saved successfully.',
                 style: TextStyle(color: AppColors.success),
               ),

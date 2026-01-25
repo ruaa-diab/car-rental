@@ -9,7 +9,7 @@ import '../../../core/services/employee_service.dart';
 import '../../../features/auth/login/login_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({Key? key}) : super(key: key);
+  const ProfileScreen({super.key});
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
@@ -290,7 +290,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 child: Center(
                   child: Text(
                     _getInitials(employeeData['name']?.toString() ?? ''),
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 40,
                       fontWeight: FontWeight.bold,
                       color: AppColors.primary,
@@ -635,9 +635,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             elevation: 2,
           ),
-          child: Row(
+          child: const Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: const [
+            children: [
               Icon(Icons.logout, size: 24),
               SizedBox(width: 12),
               Text(
@@ -714,7 +714,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           style: AppTextStyles.caption,
         ),
       ),
-      trailing: Icon(
+      trailing: const Icon(
         Icons.chevron_right,
         color: AppColors.textSecondary,
       ),
@@ -753,13 +753,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
       trailing: Switch(
         value: value,
         onChanged: onChanged,
-        activeColor: AppColors.success,
+        activeThumbColor: AppColors.success,
       ),
     );
   }
 
   Widget _buildDivider() {
-    return Divider(
+    return const Divider(
       height: 1,
       thickness: 1,
       color: AppColors.divider,
@@ -844,19 +844,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('About AutoRa'),
-        content: Column(
+        content: const Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
+            Text(
               'AutoRa - Car Rental Management',
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
-            const SizedBox(height: 8),
-            const Text('Version: 1.0.0'),
-            const SizedBox(height: 8),
-            const Text('Build: 100'),
-            const SizedBox(height: 16),
+            SizedBox(height: 8),
+            Text('Version: 1.0.0'),
+            SizedBox(height: 8),
+            Text('Build: 100'),
+            SizedBox(height: 16),
             Text(
               'Developed for managing car rental operations efficiently.',
               style: AppTextStyles.caption,

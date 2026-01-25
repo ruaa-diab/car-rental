@@ -4,7 +4,7 @@ import '../../../core/theme/app_text_styles.dart';
 import '../../../core/services/report_service.dart';
 
 class ReportsScreen extends StatefulWidget {
-  const ReportsScreen({Key? key}) : super(key: key);
+  const ReportsScreen({super.key});
 
   @override
   State<ReportsScreen> createState() => _ReportsScreenState();
@@ -336,7 +336,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                 ),
                 child: Text(
                   change,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 11,
                     fontWeight: FontWeight.bold,
                     color: AppColors.success,
@@ -410,12 +410,12 @@ class _ReportsScreenState extends State<ReportsScreen> {
                 ),
                 if (index < topCars.length - 1) ...[
                   const SizedBox(height: 12),
-                  Divider(color: AppColors.divider),
+                  const Divider(color: AppColors.divider),
                   const SizedBox(height: 12),
                 ],
               ],
             );
-          }).toList(),
+          }),
         ],
       ),
     );
@@ -461,7 +461,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
         ),
         Text(
           '\$${revenue.toStringAsFixed(0)}',
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
             color: AppColors.success,
@@ -513,12 +513,12 @@ class _ReportsScreenState extends State<ReportsScreen> {
                 ),
                 if (index < topCustomers.length - 1) ...[
                   const SizedBox(height: 12),
-                  Divider(color: AppColors.divider),
+                  const Divider(color: AppColors.divider),
                   const SizedBox(height: 12),
                 ],
               ],
             );
-          }).toList(),
+          }),
         ],
       ),
     );
@@ -564,7 +564,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
         ),
         Text(
           '\$${spent.toStringAsFixed(0)}',
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
             color: AppColors.success,

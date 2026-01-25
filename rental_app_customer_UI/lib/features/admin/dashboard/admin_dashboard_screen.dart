@@ -18,7 +18,7 @@ import '../settings/settings_screen.dart';
 import '../../shared/rent_car_screen.dart';
 
 class AdminDashboardScreen extends StatefulWidget {
-  const AdminDashboardScreen({Key? key}) : super(key: key);
+  const AdminDashboardScreen({super.key});
 
   @override
   State<AdminDashboardScreen> createState() => _AdminDashboardScreenState();
@@ -112,7 +112,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
               color: Colors.white,
               shape: BoxShape.circle,
             ),
-            child: Icon(
+            child: const Icon(
               Icons.admin_panel_settings,
               color: AppColors.primary,
               size: 24,
@@ -162,7 +162,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
               child: Container(
                 width: 8,
                 height: 8,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: AppColors.error,
                   shape: BoxShape.circle,
                 ),
@@ -436,7 +436,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => CarsListScreen()),
+              MaterialPageRoute(builder: (context) => const CarsListScreen()),
             );
           },
         ),
@@ -448,7 +448,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => EmployeesListScreen()),
+              MaterialPageRoute(builder: (context) => const EmployeesListScreen()),
             );
           },
         ),
@@ -460,7 +460,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => CustomersListScreen()),
+              MaterialPageRoute(builder: (context) => const CustomersListScreen()),
             );
           },
         ),
@@ -472,7 +472,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => BookingsListScreen()),
+              MaterialPageRoute(builder: (context) => const BookingsListScreen()),
             );
           },
         ),
@@ -484,7 +484,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => ReportsScreen()),
+              MaterialPageRoute(builder: (context) => const ReportsScreen()),
             );
           },
         ),
@@ -615,7 +615,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
         itemCount: activities.length,
-        separatorBuilder: (context, index) => Divider(
+        separatorBuilder: (context, index) => const Divider(
           height: 1,
           color: AppColors.divider,
         ),
