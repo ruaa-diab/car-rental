@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
-import '../../../core/theme/app_text_styles.dart';
-import '../../../features/auth/onboarding/onboarding_screen.dart'
-    hide AppColors;
+import '../onboarding/onboarding_screen.dart';
 
 class WelcomeAppScreen extends StatefulWidget {
   const WelcomeAppScreen({super.key});
@@ -24,12 +22,21 @@ class _WelcomeAppScreenState extends State<WelcomeAppScreen>
       duration: const Duration(milliseconds: 1500),
     )..forward();
 
-    Future.delayed(const Duration(seconds: 4), () {
+    // Always go to onboarding after splash
+    Future.delayed(const Duration(seconds: 3), () {
+      if (!mounted) return;
+      
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (_) => const OnboardingScreen()),
       );
     });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   @override
@@ -43,15 +50,15 @@ class _WelcomeAppScreenState extends State<WelcomeAppScreen>
             mainAxisSize: MainAxisSize.min,
             children: [
               Image.asset(
-                'assets/images/logo.png', // YOU will adjust name
+                'assets/images/logo.png',
                 height: 90,
               ),
               const SizedBox(height: 16),
               const Text(
                 'Autora',
                 style: TextStyle(
-                  fontSize: 32, // BIGGER
-                  fontWeight: FontWeight.bold, // BOLDER
+                  fontSize: 32,
+                  fontWeight: FontWeight.bold,
                   color: AppColors.primaryText,
                   letterSpacing: 1.2,
                 ),
