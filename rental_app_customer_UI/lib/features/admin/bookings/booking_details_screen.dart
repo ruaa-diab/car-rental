@@ -5,7 +5,7 @@ import '../../../core/theme/app_text_styles.dart';
 class BookingDetailsScreen extends StatelessWidget {
   final String bookingId;
 
-  const BookingDetailsScreen({super.key, required this.bookingId});
+  const BookingDetailsScreen({Key? key, required this.bookingId}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -300,7 +300,7 @@ class BookingDetailsScreen extends StatelessWidget {
               ),
               Text(
                 '\$${booking['totalAmount']}',
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
                   color: AppColors.success,
@@ -348,7 +348,7 @@ class BookingDetailsScreen extends StatelessWidget {
                 },
                 style: OutlinedButton.styleFrom(
                   foregroundColor: AppColors.error,
-                  side: const BorderSide(color: AppColors.error),
+                  side: BorderSide(color: AppColors.error),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
@@ -406,7 +406,7 @@ class BookingDetailsScreen extends StatelessWidget {
   }
 
   Widget _buildDivider() {
-    return const Divider(height: 1, color: AppColors.divider);
+    return Divider(height: 1, color: AppColors.divider);
   }
 
   void _showCancelDialog(BuildContext context) {

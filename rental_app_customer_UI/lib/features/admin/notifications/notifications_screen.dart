@@ -3,7 +3,7 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_text_styles.dart';
 
 class NotificationsScreen extends StatefulWidget {
-  const NotificationsScreen({super.key});
+  const NotificationsScreen({Key? key}) : super(key: key);
 
   @override
   State<NotificationsScreen> createState() => _NotificationsScreenState();
@@ -230,7 +230,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
       color: AppColors.cardWhite,
       child: Row(
         children: [
-          const Icon(Icons.notifications_active, size: 20, color: AppColors.primary),
+          Icon(Icons.notifications_active, size: 20, color: AppColors.primary),
           const SizedBox(width: 8),
           Text(
             '$_unreadCount unread notification${_unreadCount == 1 ? '' : 's'}',
@@ -338,7 +338,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                           Container(
                             width: 8,
                             height: 8,
-                            decoration: const BoxDecoration(
+                            decoration: BoxDecoration(
                               color: AppColors.primary,
                               shape: BoxShape.circle,
                             ),
@@ -353,7 +353,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                     const SizedBox(height: 8),
                     Row(
                       children: [
-                        const Icon(Icons.access_time, size: 14, color: AppColors.textSecondary),
+                        Icon(Icons.access_time, size: 14, color: AppColors.textSecondary),
                         const SizedBox(width: 4),
                         Text(
                           notification['time'],

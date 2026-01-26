@@ -28,12 +28,13 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<void> _loadData() async {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
-    final bookingProvider = Provider.of<BookingProvider>(context, listen: false);
+    final bookingProvider =
+        Provider.of<BookingProvider>(context, listen: false);
     final carProvider = Provider.of<CarProvider>(context, listen: false);
-    
+
     // Load user's bookings
     await bookingProvider.loadMyBookings();
-    
+
     // Load available cars
     await carProvider.loadCars();
   }
@@ -47,7 +48,8 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             Consumer<AuthProvider>(
               builder: (context, authProvider, child) {
-                final userName = authProvider.user?.fullName.split(' ').first ?? 'User';
+                final userName =
+                    authProvider.user?.fullName.split(' ').first ?? 'User';
                 return AppHeader(greetingName: userName);
               },
             ),
@@ -209,6 +211,7 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Car Image
             ClipRRect(
               borderRadius: BorderRadius.circular(16),
               child: booking.carImageUrl != null
@@ -234,6 +237,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
             ),
             const SizedBox(height: 12),
+
+            // Car Name
             Text(
               booking.carName ?? 'Car',
               style: const TextStyle(
@@ -245,6 +250,8 @@ class _HomeScreenState extends State<HomeScreen> {
               overflow: TextOverflow.ellipsis,
             ),
             const Spacer(),
+
+            // Status Badge
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
               decoration: BoxDecoration(
@@ -258,7 +265,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     width: 6,
                     height: 6,
                     decoration: BoxDecoration(
-                     color: _getStatusColor(booking.status.name),
+                      color: _getStatusColor(booking.status.name),
                       shape: BoxShape.circle,
                     ),
                   ),
@@ -315,14 +322,6 @@ class _HomeScreenState extends State<HomeScreen> {
           'assets/images/marketing.gif',
           fit: BoxFit.cover,
           alignment: Alignment.topCenter,
-          errorBuilder: (context, error, stackTrace) {
-            return Container(
-              color: AppColors.primary.withOpacity(0.1),
-              child: const Center(
-                child: Icon(Icons.image, size: 50, color: AppColors.primary),
-              ),
-            );
-          },
         ),
       ),
     );
@@ -345,15 +344,15 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       child: Stack(
         children: [
-          const Positioned(
+          Positioned(
             left: 20,
             top: 20,
-            right: 180,
+            right: 20,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
+              children: const [
                 Text(
-                  'Book Your Perfect Ride',
+                  'Your next ride is waiting',
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.w700,
@@ -363,7 +362,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 SizedBox(height: 8),
                 Text(
-                  'Find the perfect car\nfor your journey',
+                  'Premium cars • Easy booking\nDrive with comfort today',
                   style: TextStyle(
                     fontSize: 12,
                     color: AppColors.textSecondary,
@@ -389,7 +388,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 backgroundColor: AppColors.primary,
                 elevation: 0,
                 padding: const EdgeInsets.symmetric(
-                  horizontal: 20,
+                  horizontal: 24,
                   vertical: 12,
                 ),
                 shape: RoundedRectangleBorder(
@@ -407,26 +406,13 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           Positioned(
-            right: 0,
-            top: 0,
-            bottom: 0,
-            child: ClipRRect(
-              borderRadius: const BorderRadius.only(
-                topRight: Radius.circular(20),
-                bottomRight: Radius.circular(20),
-              ),
-              child: Image.asset(
-                'assets/images/car_ex.jpg',
-                width: 180,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) {
-                  return Container(
-                    width: 180,
-                    color: AppColors.softBackground,
-                    child: const Icon(Icons.car_rental, size: 50),
-                  );
-                },
-              ),
+            right: -5,
+            bottom: -5,
+            child: Image.asset(
+              'assets/images/car.png',
+              width: 170,
+              height: 110,
+              fit: BoxFit.contain,
             ),
           ),
         ],
@@ -436,84 +422,96 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _marketingCard(BuildContext context) {
     return Container(
-      width: double.infinity,
-      height: 180,
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [AppColors.primary, Color(0xFF1A237E)],
+      height: 200,
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(20)),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(20),
+        child: Stack(
+          children: [
+            Positioned.fill(
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                    colors: [Colors.black.withOpacity(0.7), Colors.transparent],
+                  ),
+                ),
+              ),
+            ),
+            Positioned(
+              right: 0,
+              top: 0,
+              bottom: 0,
+              width: 150,
+              child: Center(
+                child: Image.asset(
+                  'assets/images/car_2.png',
+                  width: 600,
+                  fit: BoxFit.contain,
+                ),
+              ),
+            ),
+            Positioned(
+              left: 24,
+              top: 30,
+              right: 180,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Drive Your Dreams',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      height: 1.2,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  const Text(
+                    'Premium cars at your fingertips.\nBook now and hit the road!',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.white,
+                      height: 1.4,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Positioned(
+              left: 24,
+              bottom: 24,
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const SearchScreen(),
+                    ),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  foregroundColor: AppColors.primary,
+                  elevation: 0,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 24,
+                    vertical: 12,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                ),
+                child: const Text(
+                  'Explore Now',
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+                ),
+              ),
+            ),
+          ],
         ),
-        borderRadius: BorderRadius.circular(24),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.primary.withOpacity(0.3),
-            blurRadius: 15,
-            offset: const Offset(0, 8),
-          ),
-        ],
-      ),
-      child: Stack(
-        children: [
-          const Positioned(
-            left: 24,
-            top: 24,
-            right: 140,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Drive Your Dreams',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                    height: 1.2,
-                  ),
-                ),
-                SizedBox(height: 8),
-                Text(
-                  'Premium cars at your fingertips.\nBook now and hit the road!',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.white,
-                    height: 1.4,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Positioned(
-            left: 24,
-            bottom: 24,
-            child: ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const SearchScreen(),
-                  ),
-                );
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.white,
-                foregroundColor: AppColors.primary,
-                elevation: 0,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 24,
-                  vertical: 12,
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
-              ),
-              child: const Text(
-                'Explore Now',
-                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
-              ),
-            ),
-          ),
-        ],
       ),
     );
   }
@@ -578,13 +576,13 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       child: Stack(
         children: [
-          const Positioned(
+          Positioned(
             left: 20,
             top: 20,
             right: 180,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
+              children: const [
                 Text(
                   'Find Nearest Branch',
                   style: TextStyle(

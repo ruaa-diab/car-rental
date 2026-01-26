@@ -8,7 +8,7 @@ import '../../auth/login/login_screen.dart';
 import 'edit_profile_screen.dart';
 
 class AdminProfileScreen extends StatefulWidget {
-  const AdminProfileScreen({super.key});
+  const AdminProfileScreen({Key? key}) : super(key: key);
 
   @override
   State<AdminProfileScreen> createState() => _AdminProfileScreenState();

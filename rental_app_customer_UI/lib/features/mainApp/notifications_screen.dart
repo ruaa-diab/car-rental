@@ -253,7 +253,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
             ),
           ),
           const SizedBox(height: 8),
-          const Text(
+          Text(
             'You\'ll see your notifications here',
             style: TextStyle(fontSize: 14, color: AppColors.textSecondary),
             textAlign: TextAlign.center,

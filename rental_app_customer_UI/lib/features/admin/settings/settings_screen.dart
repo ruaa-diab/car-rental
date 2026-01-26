@@ -3,7 +3,7 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_text_styles.dart';
 
 class SettingsScreen extends StatefulWidget {
-  const SettingsScreen({super.key});
+  const SettingsScreen({Key? key}) : super(key: key);
 
   @override
   State<SettingsScreen> createState() => _SettingsScreenState();
@@ -270,11 +270,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
       context: context,
       builder: (dialogContext) => StatefulBuilder(
         builder: (context, setDialogState) => AlertDialog(
-          title: const Row(
+          title: Row(
             children: [
-              Icon(Icons.schedule, color: AppColors.primary),
-              SizedBox(width: 12),
-              Expanded(child: Text('Business Hours')),
+              const Icon(Icons.schedule, color: AppColors.primary),
+              const SizedBox(width: 12),
+              const Expanded(child: Text('Business Hours')),
             ],
           ),
           content: SizedBox(
@@ -367,7 +367,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     isClosed = value;
                   });
                 },
-                activeThumbColor: AppColors.error,
+                activeColor: AppColors.error,
               ),
               const Divider(),
               if (!isClosed) ...[
@@ -381,7 +381,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ),
                     Expanded(
                       child: DropdownButtonFormField<String>(
-                        initialValue: openTime,
+                        value: openTime,
                         decoration: const InputDecoration(
                           contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                           border: OutlineInputBorder(),
@@ -409,7 +409,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ),
                     Expanded(
                       child: DropdownButtonFormField<String>(
-                        initialValue: closeTime,
+                        value: closeTime,
                         decoration: const InputDecoration(
                           contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                           border: OutlineInputBorder(),
@@ -502,7 +502,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       trailing: Switch(
         value: value,
         onChanged: onChanged,
-        activeThumbColor: AppColors.primary,
+        activeColor: AppColors.primary,
       ),
     );
   }
@@ -531,7 +531,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         subtitle,
         style: AppTextStyles.caption.copyWith(fontSize: 11),
       ),
-      trailing: const Icon(Icons.arrow_forward_ios, size: 16, color: AppColors.textSecondary),
+      trailing: Icon(Icons.arrow_forward_ios, size: 16, color: AppColors.textSecondary),
       onTap: onTap,
     );
   }

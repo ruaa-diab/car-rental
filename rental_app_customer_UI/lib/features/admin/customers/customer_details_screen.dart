@@ -5,7 +5,7 @@ import '../../../core/theme/app_text_styles.dart';
 class CustomerDetailsScreen extends StatelessWidget {
   final String customerId;
 
-  const CustomerDetailsScreen({super.key, required this.customerId});
+  const CustomerDetailsScreen({Key? key, required this.customerId}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -106,7 +106,7 @@ class CustomerDetailsScreen extends StatelessWidget {
             child: Center(
               child: Text(
                 customer['avatar'],
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 40,
                   fontWeight: FontWeight.bold,
                   color: AppColors.success,
@@ -348,7 +348,7 @@ class CustomerDetailsScreen extends StatelessWidget {
             style: AppTextStyles.sectionTitle.copyWith(fontSize: 18),
           ),
           const SizedBox(height: 16),
-          ...bookings.map((booking) => _buildBookingItem(booking)),
+          ...bookings.map((booking) => _buildBookingItem(booking)).toList(),
         ],
       ),
     );
@@ -405,7 +405,7 @@ class CustomerDetailsScreen extends StatelessWidget {
           const SizedBox(height: 4),
           Row(
             children: [
-              const Icon(Icons.calendar_today, size: 14, color: AppColors.textSecondary),
+              Icon(Icons.calendar_today, size: 14, color: AppColors.textSecondary),
               const SizedBox(width: 4),
               Text(
                 booking['date'],
@@ -414,7 +414,7 @@ class CustomerDetailsScreen extends StatelessWidget {
               const Spacer(),
               Text(
                 '\$${booking['amount']}',
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.bold,
                   color: AppColors.warning,

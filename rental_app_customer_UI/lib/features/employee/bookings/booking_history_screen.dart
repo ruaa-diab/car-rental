@@ -5,7 +5,7 @@ import '../../../core/widgets/employee_bottom_nav.dart';
 import '../../../core/services/booking_service.dart';
 
 class BookingHistoryScreen extends StatefulWidget {
-  const BookingHistoryScreen({super.key});
+  const BookingHistoryScreen({Key? key}) : super(key: key);
 
   @override
   State<BookingHistoryScreen> createState() => _BookingHistoryScreenState();

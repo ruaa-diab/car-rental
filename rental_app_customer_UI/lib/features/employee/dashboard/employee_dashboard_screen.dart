@@ -12,7 +12,7 @@ import '../performance/performance_screen.dart';
 import '../../shared/rent_car_screen.dart';
 
 class EmployeeDashboardScreen extends StatefulWidget {
-  const EmployeeDashboardScreen({super.key});
+  const EmployeeDashboardScreen({Key? key}) : super(key: key);
 
   @override
   State<EmployeeDashboardScreen> createState() => _EmployeeDashboardScreenState();
@@ -54,7 +54,7 @@ class _EmployeeDashboardScreenState extends State<EmployeeDashboardScreen> {
         if (_employeeId > 0) {
           try {
             final tasksResponse = await TaskService.instance.getTodaysTasksForEmployee(_employeeId);
-            final tasks = tasksResponse;
+            final tasks = tasksResponse is List ? tasksResponse : [];
 
             _tasksToday = tasks.length;
             _completedToday = tasks.where((t) => t['status'] == 'COMPLETED').length;
@@ -358,7 +358,7 @@ class _EmployeeDashboardScreenState extends State<EmployeeDashboardScreen> {
               ),
             ),
             const SizedBox(height: 4),
-            const Text(
+            Text(
               'All caught up! Check back later.',
               style: AppTextStyles.caption,
             ),
@@ -908,12 +908,12 @@ class GridLayout extends StatelessWidget {
   final List<Widget> children;
 
   const GridLayout({
-    super.key,
+    Key? key,
     required this.crossAxisCount,
     required this.crossAxisSpacing,
     required this.mainAxisSpacing,
     required this.children,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

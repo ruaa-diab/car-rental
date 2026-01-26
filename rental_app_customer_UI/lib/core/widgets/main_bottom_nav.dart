@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import '../theme/app_colors.dart';
 import '../../features/mainApp/home.dart';
+import '../../features/booking/booking_screen.dart';
 import '../../features/mainApp/search_screen.dart';
-import '../../features/mainApp/favorites_screen.dart';
-import '../../features/mainApp/notifications_screen.dart';
+import '../../features/mainApp/map_screen.dart';
 import '../../features/mainApp/profile_screen.dart';
 
 class MainBottomNav extends StatelessWidget {
@@ -13,12 +13,14 @@ class MainBottomNav extends StatelessWidget {
   const MainBottomNav({super.key, required this.currentIndex, this.onTap});
 
   void _handleNavigation(BuildContext context, int index) {
+    // If onTap is provided, use it (for custom handling)
     if (onTap != null) {
       onTap!(index);
       return;
     }
 
-    if (index == currentIndex) return;
+    // Default navigation behavior
+    if (index == currentIndex) return; // Already on this screen
 
     Widget? destination;
     switch (index) {
@@ -26,13 +28,13 @@ class MainBottomNav extends StatelessWidget {
         destination = const HomeScreen();
         break;
       case 1:
-        destination = const SearchScreen();
+        destination = const BookingScreen();
         break;
       case 2:
-        destination = const FavoritesScreen();
+        destination = const SearchScreen();
         break;
       case 3:
-        destination = const NotificationsScreen();
+        destination = const MapScreen();
         break;
       case 4:
         destination = const ProfileScreen();
@@ -41,6 +43,9 @@ class MainBottomNav extends StatelessWidget {
         return;
     }
 
+    if (destination == null) return;
+
+    // Navigate with replacement to avoid stacking screens
     Navigator.pushReplacement(
       context,
       PageRouteBuilder(
@@ -67,9 +72,17 @@ class MainBottomNav extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           _buildNavItem(context: context, icon: Icons.home_outlined, index: 0),
-          _buildNavItem(context: context, icon: Icons.search_outlined, index: 1),
-          _buildNavItem(context: context, icon: Icons.favorite_outline, index: 2),
-          _buildNavItem(context: context, icon: Icons.notifications_outlined, index: 3),
+          _buildNavItem(
+            context: context,
+            icon: Icons.calendar_today_outlined,
+            index: 1,
+          ),
+          _buildNavItem(
+            context: context,
+            icon: Icons.explore_outlined,
+            index: 2,
+          ),
+          _buildNavItem(context: context, icon: Icons.map_outlined, index: 3),
           _buildNavItem(context: context, icon: Icons.person_outline, index: 4),
         ],
       ),

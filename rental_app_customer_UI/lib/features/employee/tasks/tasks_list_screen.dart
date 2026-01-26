@@ -132,7 +132,7 @@ class _TasksListScreenState extends State<TasksListScreen> {
         child: Column(
           children: [
             // Header
-            const EmployeeHeader(employeeName: 'Khaled'),
+            EmployeeHeader(employeeName: 'Khaled'),
 
             // Content
             Expanded(
@@ -149,13 +149,13 @@ class _TasksListScreenState extends State<TasksListScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Text(
+                          Text(
                             'All Tasks',
                             style: AppTextStyles.appTitle,
                           ),
                           // Sort Button
                           IconButton(
-                            icon: const Icon(
+                            icon: Icon(
                               Icons.sort,
                               color: AppColors.primary,
                             ),
@@ -214,13 +214,13 @@ class _TasksListScreenState extends State<TasksListScreen> {
           hintStyle: AppTextStyles.bodyMedium.copyWith(
             color: AppColors.textHint,
           ),
-          prefixIcon: const Icon(
+          prefixIcon: Icon(
             Icons.search,
             color: AppColors.primary,
           ),
           suffixIcon: _searchQuery.isNotEmpty
               ? IconButton(
-                  icon: const Icon(
+                  icon: Icon(
                     Icons.clear,
                     color: AppColors.textSecondary,
                   ),
@@ -238,7 +238,7 @@ class _TasksListScreenState extends State<TasksListScreen> {
           ),
           filled: true,
           fillColor: Colors.transparent,
-          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+          contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         ),
       ),
     );
@@ -281,7 +281,7 @@ class _TasksListScreenState extends State<TasksListScreen> {
                   Text(label),
                   const SizedBox(width: 6),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                    padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                     decoration: BoxDecoration(
                       color: isSelected
                           ? Colors.white.withOpacity(0.3)
@@ -312,7 +312,7 @@ class _TasksListScreenState extends State<TasksListScreen> {
                 fontWeight: FontWeight.w600,
                 fontSize: 13,
               ),
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+              padding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
               elevation: isSelected ? 4 : 0,
               shadowColor: AppColors.primary.withOpacity(0.3),
             ),
@@ -346,12 +346,10 @@ class _TasksListScreenState extends State<TasksListScreen> {
           if (_selectedFilter != 'All') {
             final status = task['status'] as String;
             if (_selectedFilter == 'Pending' && status != 'pending') return false;
-            if (_selectedFilter == 'In Progress' && status != 'in_progress') {
+            if (_selectedFilter == 'In Progress' && status != 'in_progress')
               return false;
-            }
-            if (_selectedFilter == 'Completed' && status != 'completed') {
+            if (_selectedFilter == 'Completed' && status != 'completed')
               return false;
-            }
           }
 
           // Filter by search
@@ -367,7 +365,7 @@ class _TasksListScreenState extends State<TasksListScreen> {
           return true;
         }).toList();
 
-        if (filteredTasks.isEmpty) return const SizedBox.shrink();
+        if (filteredTasks.isEmpty) return SizedBox.shrink();
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -377,7 +375,7 @@ class _TasksListScreenState extends State<TasksListScreen> {
               padding: const EdgeInsets.only(bottom: 12),
               child: Row(
                 children: [
-                  const Icon(
+                  Icon(
                     Icons.calendar_today,
                     size: 16,
                     color: AppColors.primary,
@@ -395,7 +393,7 @@ class _TasksListScreenState extends State<TasksListScreen> {
             ),
 
             // Tasks
-            ...filteredTasks.map((task) => _buildTaskCard(task)),
+            ...filteredTasks.map((task) => _buildTaskCard(task)).toList(),
 
             const SizedBox(height: 24),
           ],
@@ -591,7 +589,7 @@ class _TasksListScreenState extends State<TasksListScreen> {
                       // Time
                       Row(
                         children: [
-                          const Icon(
+                          Icon(
                             Icons.access_time,
                             size: 13,
                             color: AppColors.textSecondary,
@@ -644,7 +642,7 @@ class _TasksListScreenState extends State<TasksListScreen> {
                 ),
 
                 // Arrow
-                const Icon(
+                Icon(
                   Icons.chevron_right,
                   color: AppColors.textSecondary,
                   size: 20,
@@ -670,7 +668,7 @@ class _TasksListScreenState extends State<TasksListScreen> {
     showModalBottomSheet(
       context: context,
       backgroundColor: AppColors.cardWhite,
-      shape: const RoundedRectangleBorder(
+      shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       builder: (context) {
@@ -680,7 +678,7 @@ class _TasksListScreenState extends State<TasksListScreen> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
+              Text(
                 'Sort By',
                 style: AppTextStyles.sectionTitle,
               ),

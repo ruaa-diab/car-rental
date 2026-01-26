@@ -7,7 +7,7 @@ import 'add_car_screen.dart';
 import '../../../core/widgets/admin_bottom_nav.dart';
 
 class CarsListScreen extends StatefulWidget {
-  const CarsListScreen({super.key});
+  const CarsListScreen({Key? key}) : super(key: key);
 
   @override
   State<CarsListScreen> createState() => _CarsListScreenState();
@@ -27,66 +27,37 @@ class _CarsListScreenState extends State<CarsListScreen> {
   }
 
   Future<void> _loadCars() async {
-  setState(() {
-    _isLoading = true;
-    _error = null;
-  });
+    setState(() {
+      _isLoading = true;
+      _error = null;
+    });
 
-  try {
-    // ⬅️ مهم: استخدمي الendpoint تبع المدير
-    final cars = await CarService.instance.getAllCarsManager();
-    setState(() {
-      _cars = cars.map((c) => c as Map<String, dynamic>).toList();
-      _isLoading = false;
-    });
-  } catch (e) {
-    setState(() {
-      _error = e.toString();
-      _isLoading = false;
-    });
+    try {
+      final cars = await CarService.instance.getAllCars();
+      setState(() {
+        _cars = cars.map((c) => c as Map<String, dynamic>).toList();
+        _isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        _error = e.toString();
+        _isLoading = false;
+      });
+    }
   }
-}
-String _getStatusFromCar(Map<String, dynamic> car) {
-  final isActive = (car['isActive'] ?? car['active']) == true;
-  final availableQty = (car['availableQuantity'] ?? 0) as int;
-
-  if (!isActive) return 'MAINTENANCE';
-  if (availableQty == 0) return 'RENTED';
-  return 'AVAILABLE';
-}
-
-
-  /// ----------- STATUS HELPERS (IMPORTANT PART) ------------
-
-  /// Derive status from backend fields:
-  /// - !isActive        -> Maintenance
-  /// - isActive & qty 0 -> Rented
-  /// - isActive & qty>0 -> Available
-String _getStatus(Map<String, dynamic> car) {
-  // backend يرسل active، أحياناً نستخدم isActive في الـ app
-  final isActive = (car['isActive'] ?? car['active']) == true;
-  final availableQty = (car['availableQuantity'] ?? 0) as int;
-
-  if (!isActive) return 'MAINTENANCE';
-  if (availableQty == 0) return 'RENTED';
-  return 'AVAILABLE';
-}
-  /// -------------- FILTERED CARS ----------------
 
   List<Map<String, dynamic>> get _filteredCars {
     return _cars.where((car) {
       final brand = car['brand']?.toString() ?? '';
       final model = car['model']?.toString() ?? '';
-      final name = car['name']?.toString() ?? '$brand $model';
-      final plateNumber = car['licensePlate']?.toString() ?? '';
+      final name = car['name']?.toString() ?? '';
+      final plateNumber = car['plateNumber']?.toString() ?? '';
+      final status = car['status']?.toString().toUpperCase() ?? 'AVAILABLE';
 
-      final status = _getStatus(car); // ALWAYS from helper
-
-      final matchesSearch =
-          brand.toLowerCase().contains(_searchQuery.toLowerCase()) ||
-              model.toLowerCase().contains(_searchQuery.toLowerCase()) ||
-              name.toLowerCase().contains(_searchQuery.toLowerCase()) ||
-              plateNumber.toLowerCase().contains(_searchQuery.toLowerCase());
+      final matchesSearch = brand.toLowerCase().contains(_searchQuery.toLowerCase()) ||
+          model.toLowerCase().contains(_searchQuery.toLowerCase()) ||
+          name.toLowerCase().contains(_searchQuery.toLowerCase()) ||
+          plateNumber.toLowerCase().contains(_searchQuery.toLowerCase());
 
       final matchesFilter = _selectedFilter == 'All' ||
           status == _selectedFilter.toUpperCase();
@@ -141,9 +112,9 @@ String _getStatus(Map<String, dynamic> car) {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(Icons.error_outline, size: 60, color: AppColors.error),
+          Icon(Icons.error_outline, size: 60, color: AppColors.error),
           const SizedBox(height: 16),
-          const Text('Error loading cars', style: AppTextStyles.sectionTitle),
+          Text('Error loading cars', style: AppTextStyles.sectionTitle),
           const SizedBox(height: 8),
           Text(_error ?? '', style: AppTextStyles.caption),
           const SizedBox(height: 16),
@@ -236,14 +207,12 @@ String _getStatus(Map<String, dynamic> car) {
     );
   }
 
-  /// ----------- STATS BAR (uses same status helper) -----------
-
   Widget _buildStatsBar() {
     final totalCars = _cars.length;
-    final availableCars =
-        _cars.where((c) => _getStatus(c) == 'AVAILABLE').length;
-    final rentedCars =
-        _cars.where((c) => _getStatus(c) == 'RENTED').length;
+    final availableCars = _cars.where((c) =>
+        (c['status']?.toString().toUpperCase() ?? 'AVAILABLE') == 'AVAILABLE').length;
+    final rentedCars = _cars.where((c) =>
+        (c['status']?.toString().toUpperCase() ?? '') == 'RENTED').length;
 
     return Container(
       padding: const EdgeInsets.all(16),
@@ -297,7 +266,7 @@ String _getStatus(Map<String, dynamic> car) {
   }
 
   Widget _buildCarCard(Map<String, dynamic> car) {
-    final status = _getStatus(car); // 'AVAILABLE' / 'RENTED' / 'MAINTENANCE'
+    final status = car['status']?.toString().toUpperCase() ?? 'AVAILABLE';
     Color statusColor;
     String statusText;
 
@@ -323,7 +292,7 @@ String _getStatus(Map<String, dynamic> car) {
     final model = car['model']?.toString() ?? '';
     final name = car['name']?.toString() ?? '$brand $model';
     final year = car['year']?.toString() ?? '';
-    final plateNumber = car['licensePlate']?.toString() ?? '';
+    final plateNumber = car['plateNumber']?.toString() ?? '';
     final pricePerDay = car['pricePerDay']?.toString() ?? '0';
     final imageUrl = car['imageUrl']?.toString();
     final images = car['additionalImages'] as List?;
@@ -365,21 +334,18 @@ String _getStatus(Map<String, dynamic> car) {
               ),
               child: firstImage != null
                   ? ClipRRect(
-                      borderRadius:
-                          const BorderRadius.vertical(top: Radius.circular(16)),
+                      borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
                       child: Image.network(
                         firstImage,
                         fit: BoxFit.cover,
                         width: double.infinity,
                         errorBuilder: (_, __, ___) => const Center(
-                          child: Icon(Icons.directions_car,
-                              size: 50, color: Colors.grey),
+                          child: Icon(Icons.directions_car, size: 50, color: Colors.grey),
                         ),
                       ),
                     )
                   : const Center(
-                      child: Icon(Icons.directions_car,
-                          size: 50, color: Colors.grey),
+                      child: Icon(Icons.directions_car, size: 50, color: Colors.grey),
                     ),
             ),
 
@@ -413,7 +379,7 @@ String _getStatus(Map<String, dynamic> car) {
                         Flexible(
                           child: Text(
                             '\$$pricePerDay/day',
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.bold,
                               color: AppColors.primary,
@@ -421,8 +387,7 @@ String _getStatus(Map<String, dynamic> car) {
                           ),
                         ),
                         Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 6, vertical: 2),
+                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                           decoration: BoxDecoration(
                             color: statusColor.withOpacity(0.1),
                             borderRadius: BorderRadius.circular(4),
@@ -466,7 +431,7 @@ String _getStatus(Map<String, dynamic> car) {
             ),
           ),
           const SizedBox(height: 8),
-          const Text(
+          Text(
             'Try adjusting your search or filters',
             style: AppTextStyles.caption,
           ),

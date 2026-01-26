@@ -4,7 +4,7 @@ import '../../../core/theme/app_text_styles.dart';
 import '../../../core/services/car_service.dart';
 
 class AddCarScreen extends StatefulWidget {
-  const AddCarScreen({super.key});
+  const AddCarScreen({Key? key}) : super(key: key);
 
   @override
   State<AddCarScreen> createState() => _AddCarScreenState();
@@ -275,7 +275,7 @@ class _AddCarScreenState extends State<AddCarScreen> {
       child: Column(
         children: [
           DropdownButtonFormField<String>(
-            initialValue: _selectedCategory,
+            value: _selectedCategory,
             decoration: InputDecoration(
               labelText: 'Category',
               prefixIcon: const Icon(Icons.category),
@@ -297,7 +297,7 @@ class _AddCarScreenState extends State<AddCarScreen> {
           ),
           const SizedBox(height: 16),
           DropdownButtonFormField<String>(
-            initialValue: _selectedTransmission,
+            value: _selectedTransmission,
             decoration: InputDecoration(
               labelText: 'Transmission',
               prefixIcon: const Icon(Icons.settings),
@@ -322,7 +322,7 @@ class _AddCarScreenState extends State<AddCarScreen> {
             children: [
               Expanded(
                 child: DropdownButtonFormField<String>(
-                  initialValue: _selectedFuelType,
+                  value: _selectedFuelType,
                   decoration: InputDecoration(
                     labelText: 'Fuel Type',
                     prefixIcon: const Icon(Icons.local_gas_station),
@@ -346,7 +346,7 @@ class _AddCarScreenState extends State<AddCarScreen> {
               const SizedBox(width: 12),
               Expanded(
                 child: DropdownButtonFormField<String>(
-                  initialValue: _selectedSeats,
+                  value: _selectedSeats,
                   decoration: InputDecoration(
                     labelText: 'Seats',
                     prefixIcon: const Icon(Icons.airline_seat_recline_normal),
@@ -410,7 +410,7 @@ class _AddCarScreenState extends State<AddCarScreen> {
           ),
           const SizedBox(height: 16),
           DropdownButtonFormField<String>(
-            initialValue: _selectedStatus,
+            value: _selectedStatus,
             decoration: InputDecoration(
               labelText: 'Status',
               prefixIcon: const Icon(Icons.info_outline),
@@ -564,26 +564,23 @@ class _AddCarScreenState extends State<AddCarScreen> {
             fuelType = 'PETROL';
         }
 
-       final carData = {
-  'name': '${_brandController.text} ${_modelController.text}',
-  'brand': _brandController.text,
-  'model': _modelController.text,
-  'year': int.tryParse(_yearController.text) ?? 2024,
-  'type': carType,
-  'transmission': _selectedTransmission.toUpperCase(),
-  'fuel': fuelType,
-  'pricePerDay': double.tryParse(_priceController.text) ?? 0,
-  'seats': int.tryParse(_selectedSeats) ?? 5,
-  'color': _colorController.text,
-  'licensePlate': _plateNumberController.text,
-  'features': _features,
-  // المهم هنا:
-  'active': _selectedStatus == 'Available',
-  'isActive': _selectedStatus == 'Available', // احتياط لو backend يقبلها
-  'totalQuantity': 1,
-  'availableQuantity': _selectedStatus == 'Available' ? 1 : 0,
-};
-
+        final carData = {
+          'name': '${_brandController.text} ${_modelController.text}',
+          'brand': _brandController.text,
+          'model': _modelController.text,
+          'year': int.tryParse(_yearController.text) ?? 2024,
+          'type': carType,
+          'transmission': _selectedTransmission.toUpperCase(),
+          'fuel': fuelType,
+          'pricePerDay': double.tryParse(_priceController.text) ?? 0,
+          'seats': int.tryParse(_selectedSeats) ?? 5,
+          'color': _colorController.text,
+          'licensePlate': _plateNumberController.text,
+          'features': _features,
+          'isActive': _selectedStatus == 'Available',
+          'totalQuantity': 1,
+          'availableQuantity': _selectedStatus == 'Available' ? 1 : 0,
+        };
 
         await CarService.instance.addCar(carData);
 

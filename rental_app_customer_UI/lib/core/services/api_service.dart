@@ -17,7 +17,7 @@ class ApiService {
   // For Android emulator use: http://10.0.2.2:9090/api/v1
   // For iOS simulator use: http://localhost:9090/api/v1
   // For physical device use your computer's IP: http://192.168.x.x:9090/api/v1
-  static const String baseUrl = 'http://localhost:9090/api/v1';
+  static const String baseUrl = 'http://10.0.2.2:9090/api/v1';
 
   static ApiService? _instance;
   String? _token;

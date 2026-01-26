@@ -3,7 +3,7 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_text_styles.dart';
 
 class NotificationsScreen extends StatefulWidget {
-  const NotificationsScreen({super.key});
+  const NotificationsScreen({Key? key}) : super(key: key);
 
   @override
   State<NotificationsScreen> createState() => _NotificationsScreenState();
@@ -175,7 +175,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
               const SizedBox(height: 8),
               Row(
                 children: [
-                  const Icon(
+                  Icon(
                     Icons.access_time,
                     size: 14,
                     color: AppColors.textSecondary,
@@ -193,7 +193,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
               ? Container(
                   width: 8,
                   height: 8,
-                  decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
                     color: AppColors.primary,
                     shape: BoxShape.circle,
                   ),
@@ -229,7 +229,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
             ),
           ),
           const SizedBox(height: 8),
-          const Text(
+          Text(
             'You\'re all caught up!',
             style: AppTextStyles.bodyMedium,
           ),

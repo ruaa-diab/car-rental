@@ -199,8 +199,8 @@ class _SearchScreenState extends State<SearchScreen> {
                                     width: 1.5,
                                   ),
                                 ),
-                                child: const Row(
-                                  children: [
+                                child: Row(
+                                  children: const [
                                     Icon(Icons.tune, size: 18, color: AppColors.primaryText),
                                     SizedBox(width: 8),
                                     Text(
@@ -296,8 +296,8 @@ class _SearchScreenState extends State<SearchScreen> {
             Expanded(
               flex: 3,
               child: Container(
-                decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                decoration: BoxDecoration(
+                  borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
                   color: AppColors.softBackground,
                 ),
                 child: ClipRRect(
@@ -338,17 +338,17 @@ class _SearchScreenState extends State<SearchScreen> {
                   const SizedBox(height: 2),
                   Row(
                     children: [
-                      const Icon(Icons.settings, size: 12, color: AppColors.textSecondary),
+                      Icon(Icons.settings, size: 12, color: AppColors.textSecondary),
                       const SizedBox(width: 2),
                       Flexible(
                         child: Text(
-                          car.transmission.length > 4 ? '${car.transmission.substring(0, 4)}...' : car.transmission,
+                          car.transmission.length > 4 ? car.transmission.substring(0, 4) + '...' : car.transmission,
                           style: const TextStyle(fontSize: 10, color: AppColors.textSecondary),
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
                       const SizedBox(width: 6),
-                      const Icon(Icons.local_gas_station, size: 12, color: AppColors.textSecondary),
+                      Icon(Icons.local_gas_station, size: 12, color: AppColors.textSecondary),
                       const SizedBox(width: 2),
                       Flexible(
                         child: Text(

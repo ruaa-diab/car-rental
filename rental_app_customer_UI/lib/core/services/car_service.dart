@@ -15,11 +15,6 @@ class CarService {
     _instance ??= CarService._();
     return _instance!;
   }
-// Get ALL cars for manager (includes rented & maintenance)
-Future<List<dynamic>> getAllCarsManager() async {
-  final response = await _api.get('/cars');
-  return response is List ? response : [];
-}
 
   // Get all cars (public)
   Future<List<dynamic>> getAllCars() async {

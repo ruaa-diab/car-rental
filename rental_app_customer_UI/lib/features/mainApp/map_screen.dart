@@ -30,14 +30,16 @@ class _MapScreenState extends State<MapScreen> {
       backgroundColor: AppColors.softBackground,
       body: Stack(
         children: [
-          // ==================== MAP AREA (Placeholder) ====================
+          // ==================== MAP BACKGROUND IMAGE ====================
           Positioned.fill(
-            child: Container(
-              color: Colors.grey.shade200,
-              child: Stack(
-                children: [
-                  // Placeholder map image or loading indicator
-                  Center(
+            child: Image.asset(
+              'assets/images/google-map.jpg', // Add your map image here
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) {
+                // Fallback if image doesn't exist
+                return Container(
+                  color: Colors.grey.shade200,
+                  child: Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -51,52 +53,53 @@ class _MapScreenState extends State<MapScreen> {
                             color: Colors.grey.shade600,
                           ),
                         ),
-                        const SizedBox(height: 8),
-                        Text(
-                          'Google Maps will be integrated here',
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.grey.shade500,
-                          ),
-                        ),
                       ],
                     ),
                   ),
-
-                  // Sample location markers from branches
-                  Consumer<BranchProvider>(
-                    builder: (context, branchProvider, child) {
-                      if (branchProvider.branches.isEmpty) {
-                        return const SizedBox.shrink();
-                      }
-                      // Show sample markers for visual representation
-                      return Stack(
-                        children: [
-                          if (branchProvider.branches.isNotEmpty)
-                            Positioned(
-                              top: 120,
-                              left: 60,
-                              child: _mapMarker(branchProvider.branches[0].name, AppColors.primary),
-                            ),
-                          if (branchProvider.branches.length > 1)
-                            Positioned(
-                              top: 200,
-                              right: 80,
-                              child: _mapMarker(branchProvider.branches[1].name, Colors.red),
-                            ),
-                          if (branchProvider.branches.length > 2)
-                            Positioned(
-                              bottom: 250,
-                              left: 120,
-                              child: _mapMarker(branchProvider.branches[2].name, Colors.blue),
-                            ),
-                        ],
-                      );
-                    },
-                  ),
-                ],
-              ),
+                );
+              },
             ),
+          ),
+
+          // ==================== BRANCH MARKERS ====================
+          Consumer<BranchProvider>(
+            builder: (context, branchProvider, child) {
+              if (branchProvider.branches.isEmpty) {
+                return const SizedBox.shrink();
+              }
+              // Show sample markers for visual representation
+              return Stack(
+                children: [
+                  if (branchProvider.branches.length > 0)
+                    Positioned(
+                      top: 120,
+                      left: 60,
+                      child: _mapMarker(
+                        branchProvider.branches[0].name,
+                        AppColors.primary,
+                      ),
+                    ),
+                  if (branchProvider.branches.length > 1)
+                    Positioned(
+                      top: 200,
+                      right: 80,
+                      child: _mapMarker(
+                        branchProvider.branches[1].name,
+                        Colors.red,
+                      ),
+                    ),
+                  if (branchProvider.branches.length > 2)
+                    Positioned(
+                      bottom: 250,
+                      left: 120,
+                      child: _mapMarker(
+                        branchProvider.branches[2].name,
+                        Colors.blue,
+                      ),
+                    ),
+                ],
+              );
+            },
           ),
 
           // ==================== TOP APP BAR ====================
@@ -220,7 +223,8 @@ class _MapScreenState extends State<MapScreen> {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            const Icon(Icons.error_outline, size: 48, color: Colors.red),
+                            const Icon(Icons.error_outline,
+                                size: 48, color: Colors.red),
                             const SizedBox(height: 16),
                             Text(branchProvider.error!),
                             const SizedBox(height: 16),
@@ -273,7 +277,8 @@ class _MapScreenState extends State<MapScreen> {
               color: AppColors.primary.withOpacity(0.1),
               borderRadius: BorderRadius.circular(12),
             ),
-            child: const Icon(Icons.location_on, color: AppColors.primary, size: 24),
+            child: const Icon(Icons.location_on,
+                color: AppColors.primary, size: 24),
           ),
           const SizedBox(width: 16),
           Expanded(
@@ -299,11 +304,13 @@ class _MapScreenState extends State<MapScreen> {
                 const SizedBox(height: 4),
                 Row(
                   children: [
-                    const Icon(Icons.phone, size: 14, color: AppColors.textSecondary),
+                    const Icon(Icons.phone,
+                        size: 14, color: AppColors.textSecondary),
                     const SizedBox(width: 4),
                     Text(
                       branch.phone ?? 'N/A',
-                      style: const TextStyle(fontSize: 12, color: AppColors.textSecondary),
+                      style: const TextStyle(
+                          fontSize: 12, color: AppColors.textSecondary),
                     ),
                   ],
                 ),
@@ -313,15 +320,17 @@ class _MapScreenState extends State<MapScreen> {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
-              color: Colors.green.withOpacity(0.1),
+              color: branch.isActive
+                  ? Colors.green.withOpacity(0.1)
+                  : Colors.red.withOpacity(0.1),
               borderRadius: BorderRadius.circular(20),
             ),
-            child: const Text(
-              'Open',
+            child: Text(
+              branch.isActive ? 'Open' : 'Closed',
               style: TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w600,
-                color: Colors.green,
+                color: branch.isActive ? Colors.green : Colors.red,
               ),
             ),
           ),
@@ -330,7 +339,7 @@ class _MapScreenState extends State<MapScreen> {
     );
   }
 
-  // ==================== MAP MARKER (Sample) ====================
+  // ==================== MAP MARKER ====================
   Widget _mapMarker(String label, Color color) {
     return Column(
       children: [
@@ -341,7 +350,7 @@ class _MapScreenState extends State<MapScreen> {
             borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.1),
+                color: Colors.black.withOpacity(0.2),
                 blurRadius: 8,
                 offset: const Offset(0, 2),
               ),
