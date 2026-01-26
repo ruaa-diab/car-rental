@@ -27,7 +27,7 @@ public class CarService {
     // Get car by ID
     public Car getCarById(Long id) {
         return carRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Car not found"));
+                .orElseThrow(() -> new RuntimeException("Car not found with id: " + id));
     }
 
     // Search cars
@@ -44,6 +44,10 @@ public class CarService {
     public List<Car> getCarsByBrand(String brand) {
         return carRepository.findByBrandContainingIgnoreCaseAndIsActiveTrueAndAvailableQuantityGreaterThan(brand, 0);
     }
+// Get ALL cars (for manager)
+public List<Car> getAllCars() {
+    return carRepository.findAll();
+}
 
     // Get cars by branch
     public List<Car> getCarsByBranch(Long branchId) {
@@ -71,8 +75,16 @@ public class CarService {
     }
 
     // Filter cars with multiple criteria
-    public List<Car> filterCars(String type, String brand, String transmission, String fuel,
-                                 BigDecimal minPrice, BigDecimal maxPrice, Long branchId, Boolean availableOnly) {
+    public List<Car> filterCars(
+            String type,
+            String brand,
+            String transmission,
+            String fuel,
+            BigDecimal minPrice,
+            BigDecimal maxPrice,
+            Long branchId,
+            Boolean availableOnly
+    ) {
         List<Car> cars = getAllAvailableCars();
 
         if (type != null && !type.isEmpty()) {
@@ -91,21 +103,56 @@ public class CarService {
             cars = cars.stream().filter(c -> c.getFuel() == fuelType).toList();
         }
         if (minPrice != null) {
-            cars = cars.stream().filter(c -> c.getPricePerDay().compareTo(minPrice) >= 0).toList();
+            cars = cars.stream()
+                    .filter(c -> c.getPricePerDay().compareTo(minPrice) >= 0)
+                    .toList();
         }
         if (maxPrice != null) {
-            cars = cars.stream().filter(c -> c.getPricePerDay().compareTo(maxPrice) <= 0).toList();
+            cars = cars.stream()
+                    .filter(c -> c.getPricePerDay().compareTo(maxPrice) <= 0)
+                    .toList();
         }
         if (branchId != null) {
-            cars = cars.stream().filter(c -> c.getAvailableBranches().stream().anyMatch(b -> b.getId().equals(branchId))).toList();
+            cars = cars.stream()
+                    .filter(c -> c.getAvailableBranches().stream()
+                            .anyMatch(b -> b.getId().equals(branchId)))
+                    .toList();
         }
 
+        // لو حابة تضيفي فلترة لـ availableOnly لاحقاً
         return cars;
     }
+
+    // ================== ADMIN METHODS ================== //
 
     // Admin: Add new car
     @Transactional
     public Car addCar(Car car) {
+        // default values و validation بسيطة
+        if (car.getTotalQuantity() == null) {
+            car.setTotalQuantity(0);
+        }
+        if (car.getAvailableQuantity() == null || car.getAvailableQuantity() < 0) {
+            car.setAvailableQuantity(car.getTotalQuantity());
+        }
+
+        if (car.getPricePerDay() == null || car.getPricePerDay().compareTo(BigDecimal.ZERO) < 0) {
+            throw new IllegalArgumentException("Price per day must be a positive value");
+        }
+
+        if (car.getTotalQuantity() < 0) {
+            throw new IllegalArgumentException("Total quantity cannot be negative");
+        }
+
+        if (car.getAvailableQuantity() > car.getTotalQuantity()) {
+            car.setAvailableQuantity(car.getTotalQuantity());
+        }
+
+        // لو isActive مش محددة نخليها true
+        if (!car.isActive()) {
+            car.setActive(true);
+        }
+
         Car savedCar = carRepository.save(car);
 
         // Notify all users about new car
@@ -134,6 +181,24 @@ public class CarService {
         car.setTotalQuantity(carDetails.getTotalQuantity());
         car.setAvailableQuantity(carDetails.getAvailableQuantity());
         car.setActive(carDetails.isActive());
+      
+
+        // نفس التحقق المستخدم في addCar
+        if (car.getTotalQuantity() == null) {
+            car.setTotalQuantity(0);
+        }
+        if (car.getAvailableQuantity() == null || car.getAvailableQuantity() < 0) {
+            car.setAvailableQuantity(car.getTotalQuantity());
+        }
+        if (car.getTotalQuantity() < 0) {
+            throw new IllegalArgumentException("Total quantity cannot be negative");
+        }
+        if (car.getAvailableQuantity() > car.getTotalQuantity()) {
+            car.setAvailableQuantity(car.getTotalQuantity());
+        }
+        if (car.getPricePerDay() == null || car.getPricePerDay().compareTo(BigDecimal.ZERO) < 0) {
+            throw new IllegalArgumentException("Price per day must be a positive value");
+        }
 
         return carRepository.save(car);
     }
@@ -153,7 +218,8 @@ public class CarService {
             notificationService.createNotification(
                     user,
                     "New Car Available!",
-                    "Check out our new " + car.getName() + " - " + car.getType() + " starting at $" + car.getPricePerDay() + "/day",
+                    "Check out our new " + car.getName() + " - " + car.getType()
+                            + " starting at $" + car.getPricePerDay() + "/day",
                     NotificationType.NEW_CAR,
                     car.getId()
             );

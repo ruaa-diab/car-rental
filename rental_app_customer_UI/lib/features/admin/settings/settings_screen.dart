@@ -94,7 +94,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
       ),
     );
   }
-
   Widget _buildNotificationSettings() {
     return Container(
       decoration: BoxDecoration(

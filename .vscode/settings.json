@@ -1,3 +1,16 @@
 {
-    "java.compile.nullAnalysis.mode": "automatic"
+    "java.compile.nullAnalysis.mode": "automatic",
+    "sqltools.connections": [
+        {
+            "ssh": "Disabled",
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 5542,
+            "driver": "PostgreSQL",
+            "name": "autora_rental",
+            "database": "autora_rental",
+            "connectionTimeout": 30,
+            "username": "postgres"
+        }
+    ]
 }
