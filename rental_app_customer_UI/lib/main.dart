@@ -4,7 +4,7 @@ import 'core/theme/app_colors.dart';
 import 'core/providers/providers.dart';
 import 'core/services/auth_service.dart';
 import 'core/services/api_service.dart';
-import 'features/auth/login/login_screen.dart';
+import 'features/auth/splash/welcome_app_screen.dart';
 import 'features/mainApp/home.dart';
 import 'features/employee/dashboard/employee_dashboard_screen.dart';
 import 'features/admin/dashboard/admin_dashboard_screen.dart';
@@ -98,9 +98,9 @@ class _AuthWrapperState extends State<AuthWrapper> {
       );
     }
 
-    // Not logged in - show login screen
+    // Not logged in - show welcome/splash screen
     if (!_isLoggedIn) {
-      return const LoginScreen();
+      return const WelcomeAppScreen();
     }
 
     // Logged in - route based on role
